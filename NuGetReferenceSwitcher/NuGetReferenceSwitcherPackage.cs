@@ -11,7 +11,7 @@ using Microsoft.VisualStudio;
 using Microsoft.VisualStudio.Shell.Interop;
 using Microsoft.VisualStudio.OLE.Interop;
 using Microsoft.VisualStudio.Shell;
-using RicoSuter.NuGetReferenceSwitcher.Views;
+using NuGetReferenceSwitcher.Presentation.Views;
 
 namespace RicoSuter.NuGetReferenceSwitcher
 {

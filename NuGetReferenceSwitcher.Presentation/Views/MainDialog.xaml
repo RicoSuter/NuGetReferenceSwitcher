@@ -1,8 +1,8 @@
-﻿<Window x:Class="RicoSuter.NuGetReferenceSwitcher.Views.MainDialog"
+﻿<Window x:Class="NuGetReferenceSwitcher.Presentation.Views.MainDialog"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:viewModels="clr-namespace:RicoSuter.NuGetReferenceSwitcher.ViewModels"
         xmlns:converters="clr-namespace:MyToolkit.Converters;assembly=MyToolkit.Extended"
+        xmlns:viewModels="clr-namespace:NuGetReferenceSwitcher.Presentation.ViewModels"
         Title="Switch NuGet and Project references" 
         Height="500" Width="700" ResizeMode="CanResizeWithGrip"
         WindowStartupLocation="CenterOwner">
@@ -24,6 +24,10 @@
                         <ColumnDefinition Width="*" />
                         <ColumnDefinition Width="*" />
                     </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
                     
                     <ScrollViewer Margin="0,0,4,0">
                         <StackPanel Margin="8">
@@ -85,13 +89,19 @@
                                     </DataTemplate>
                                 </ItemsControl.ItemTemplate>
                             </ItemsControl>
-                            <Button Content="Switch to Project references" Click="OnSwitchToProjectReferences" />
                         </StackPanel>
                     </ScrollViewer>
+                    <Button Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" Margin="8" Padding="4"
+                            Content="Switch to Project references" Click="OnSwitchToProjectReferences" />
                 </Grid>
             </TabItem>
             <TabItem Header="Switch to NuGet references">
                 <Grid Margin="8">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+                    
                     <ScrollViewer>
                         <StackPanel Margin="8">
                             <TextBlock Text="Projects with NuGet DLL references: " FontWeight="Bold" />
@@ -104,11 +114,11 @@
                                                 <ItemsControl.ItemTemplate>
                                                     <DataTemplate>
                                                         <TextBlock Margin="0,0,0,4" TextWrapping="Wrap">
-                                                            <Run Text="From " />
-                                                            <Run Text="{Binding FromProjectName}" FontWeight="Bold" />
+                                                            <Run Text="From " FontWeight="Bold" />
+                                                            <Run Text="{Binding FromProjectName}" />
                                                             <LineBreak />
-                                                            <Run Text=" to " />
-                                                            <Run Text="{Binding ToAssemblyPath}" FontWeight="Bold" />
+                                                            <Run Text=" to " FontWeight="Bold" />
+                                                            <Run Text="{Binding ToAssemblyPath}" />
                                                         </TextBlock>
                                                     </DataTemplate>
                                                 </ItemsControl.ItemTemplate>
@@ -117,13 +127,14 @@
                                     </DataTemplate>
                                 </ItemsControl.ItemTemplate>
                             </ItemsControl>
-                            
-                            <CheckBox Content="Remove Projects from Solution" 
-                                      IsChecked="{Binding RemoveProjects, Mode=TwoWay}" Margin="0,8,0,8" />
-                            
-                            <Button Content="Switch to NuGet references" Click="OnSwitchToNuGetReferences" />
                         </StackPanel>
                     </ScrollViewer>
+                    
+                    <StackPanel Margin="8" Grid.Row="1">
+                        <CheckBox Content="Remove Projects from Solution" Margin="0,0,0,8"
+                                      IsChecked="{Binding RemoveProjects, Mode=TwoWay}" />
+                        <Button Content="Switch to NuGet references" Click="OnSwitchToNuGetReferences" Padding="4" />
+                    </StackPanel>
                 </Grid>
             </TabItem>
         </TabControl>

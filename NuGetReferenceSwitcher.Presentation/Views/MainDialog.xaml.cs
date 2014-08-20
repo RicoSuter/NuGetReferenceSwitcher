@@ -2,12 +2,12 @@
 using System.Windows.Forms;
 using EnvDTE;
 using MyToolkit.Mvvm;
-using RicoSuter.NuGetReferenceSwitcher.Domain;
-using RicoSuter.NuGetReferenceSwitcher.ViewModels;
+using NuGetReferenceSwitcher.Presentation.Domain;
+using NuGetReferenceSwitcher.Presentation.ViewModels;
 using Button = System.Windows.Controls.Button;
 using Window = System.Windows.Window;
 
-namespace RicoSuter.NuGetReferenceSwitcher.Views
+namespace NuGetReferenceSwitcher.Presentation.Views
 {
     /// <summary>
     /// Interaction logic for MainDialog.xaml
@@ -41,7 +41,7 @@ namespace RicoSuter.NuGetReferenceSwitcher.Views
 
         private void ButtonBase_OnClick(object sender, RoutedEventArgs e)
         {
-            var swi = (AssemblyToProjectSwitch)((Button)sender).Tag;
+            var swi = (FromAssemblyToProjectSwitch)((Button)sender).Tag;
 
             var dlg = new OpenFileDialog();
             dlg.Filter = "Project Files (*.csproj)|*.csproj";

@@ -1,14 +1,14 @@
 using MyToolkit.Model;
 
-namespace RicoSuter.NuGetReferenceSwitcher.Domain
+namespace NuGetReferenceSwitcher.Presentation.Domain
 {
-    public class AssemblyToProjectSwitch : ObservableObject
+    public class FromAssemblyToProjectSwitch : ObservableObject
     {
         private string _projectPath;
         private bool _isProjectPathSelected;
         private bool _isDeactivated;
 
-        public AssemblyToProjectSwitch(MyReference assemblyReference)
+        public FromAssemblyToProjectSwitch(ReferenceModel assemblyReference)
         {
             FromAssemblyName = assemblyReference.Name;
             FromAssemblyPath = assemblyReference.Path;
@@ -19,7 +19,7 @@ namespace RicoSuter.NuGetReferenceSwitcher.Domain
         public string FromAssemblyName { get; set; }
         public string FromAssemblyPath { get; set; }
 
-        public MyProject ToProject { get; set; }
+        public ProjectModel ToProject { get; set; }
 
         /// <summary>Gets or sets the projectPath. </summary>
         public string ProjectPath
@@ -42,7 +42,7 @@ namespace RicoSuter.NuGetReferenceSwitcher.Domain
             set { Set(ref _isDeactivated, value); }
         }
 
-        public MyProject ToProjectFromPath { get; set; }
+        public ProjectModel ToProjectFromPath { get; set; }
 
         // TODO: Add ToProjectPath => add to solution first => either ToProjectPath or ToProject
     }

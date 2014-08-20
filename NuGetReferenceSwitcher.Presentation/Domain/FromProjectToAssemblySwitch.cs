@@ -1,8 +1,9 @@
-namespace RicoSuter.NuGetReferenceSwitcher.Domain
+namespace NuGetReferenceSwitcher.Presentation.Domain
 {
-    public class ProjectToAssemblySwitch
+    public class FromProjectToAssemblySwitch
     {
         public string FromProjectName { get; set; }
+
         public string ToAssemblyPath { get; set; }
     }
 }
