@@ -1,6 +1,17 @@
-﻿using System.Windows;
+﻿//-----------------------------------------------------------------------
+// <copyright file="MainDialog.xaml.cs" company="MyToolkit">
+//     Copyright (c) Rico Suter. All rights reserved.
+// </copyright>
+// <license>http://nugetreferenceswitcher.codeplex.com/license</license>
+// <author>Rico Suter, mail@rsuter.com</author>
+//-----------------------------------------------------------------------
+
+using System;
+using System.Linq;
+using System.Windows;
 using System.Windows.Forms;
 using EnvDTE;
+using MyToolkit.Collections;
 using MyToolkit.Mvvm;
 using NuGetReferenceSwitcher.Presentation.Domain;
 using NuGetReferenceSwitcher.Presentation.ViewModels;
@@ -9,9 +20,7 @@ using Window = System.Windows.Window;
 
 namespace NuGetReferenceSwitcher.Presentation.Views
 {
-    /// <summary>
-    /// Interaction logic for MainDialog.xaml
-    /// </summary>
+    /// <summary>Interaction logic for MainDialog.xaml </summary>
     public partial class MainDialog : Window
     {
         public MainDialog(DTE application)
@@ -20,6 +29,13 @@ namespace NuGetReferenceSwitcher.Presentation.Views
             Model.Application = application;
             Model.Dispatcher = Dispatcher;
             ViewModelHelper.RegisterViewModel(Model, this);
+            Model.Projects.ExtendedCollectionChanged += OnProjectsChanged;
+        }
+
+        private void OnProjectsChanged(object sender, ExtendedNotifyCollectionChangedEventArgs<ProjectModel> args)
+        {
+            if (Model.Projects.Any(p => p.CurrentSwitches.Any()))
+                Tabs.SelectedIndex = 1;
         }
 
         public MainDialogModel Model
@@ -39,7 +55,7 @@ namespace NuGetReferenceSwitcher.Presentation.Views
             Close();
         }
 
-        private void ButtonBase_OnClick(object sender, RoutedEventArgs e)
+        private void OnSelectProjectFile(object sender, RoutedEventArgs e)
         {
             var swi = (FromAssemblyToProjectSwitch)((Button)sender).Tag;
 

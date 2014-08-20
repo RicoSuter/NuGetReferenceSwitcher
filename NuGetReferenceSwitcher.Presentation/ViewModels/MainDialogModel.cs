@@ -1,4 +1,12 @@
-﻿using System;
+﻿//-----------------------------------------------------------------------
+// <copyright file="MainDialogModel.cs" company="MyToolkit">
+//     Copyright (c) Rico Suter. All rights reserved.
+// </copyright>
+// <license>http://nugetreferenceswitcher.codeplex.com/license</license>
+// <author>Rico Suter, mail@rsuter.com</author>
+//-----------------------------------------------------------------------
+
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -24,9 +32,6 @@ namespace NuGetReferenceSwitcher.Presentation.ViewModels
             SaveProjects = true;
         }
 
-        public DTE Application { get; set; }
-        public Dispatcher Dispatcher { get; set; }
-
         public ExtendedObservableCollection<ProjectModel> Projects { get; private set; }
 
         public ExtendedObservableCollection<FromAssemblyToProjectSwitch> Switches { get; private set; }
@@ -35,12 +40,15 @@ namespace NuGetReferenceSwitcher.Presentation.ViewModels
 
         public bool RemoveProjects { get; set; }
 
+        public DTE Application { get; set; }
+
+        public Dispatcher Dispatcher { get; set; }
+
         /// <summary>Initializes the view model. Must only be called once per view model instance 
         /// (after the InitializeComponent method of a <see cref="!:UserControl"/>). </summary>
         public async override void Initialize()
         {
             List<ProjectModel> projects = null;
-
             await RunTaskAsync(token => Task.Run(() =>
             {
                 if (Application != null)
@@ -59,7 +67,7 @@ namespace NuGetReferenceSwitcher.Presentation.ViewModels
             Switches.Initialize(projects
                 .SelectMany(p => p.NuGetReferences)
                 .GroupBy(r => r.Name)
-                .Select(g => new FromAssemblyToProjectSwitch(g.First())));
+                .Select(g => new FromAssemblyToProjectSwitch(projects, g.First())));
         }
 
         public async Task SwitchToProjectReferencesAsync()
@@ -94,6 +102,7 @@ namespace NuGetReferenceSwitcher.Presentation.ViewModels
 
                                 assemblyReferenceSwitchesForProject +=
                                     assemblyToProjectSwitch.ToProjectFromPath.Name + "\t" +
+                                    assemblyToProjectSwitch.ToProjectFromPath.Path + "\t" +
                                     assemblyToProjectSwitch.FromAssemblyPath + "\n";
                             }
                             else
@@ -101,6 +110,7 @@ namespace NuGetReferenceSwitcher.Presentation.ViewModels
                                 project.AddProject(assemblyToProjectSwitch.ToProject);
                                 assemblyReferenceSwitchesForProject +=
                                     assemblyToProjectSwitch.ToProject.Name + "\t" +
+                                    assemblyToProjectSwitch.ToProject.Path + "\t" +
                                     assemblyToProjectSwitch.FromAssemblyPath + "\n";
                             }
 
@@ -110,7 +120,7 @@ namespace NuGetReferenceSwitcher.Presentation.ViewModels
                     }
 
                     if (!string.IsNullOrEmpty(assemblyReferenceSwitchesForProject))
-                        File.AppendAllText(project.ConfigurationPath, assemblyReferenceSwitchesForProject);
+                        File.AppendAllText(project.CurrentConfigurationPath, assemblyReferenceSwitchesForProject);
                 }
             }, token));
         }
@@ -130,13 +140,13 @@ namespace NuGetReferenceSwitcher.Presentation.ViewModels
             await RunTaskAsync(token => Task.Run(() =>
             {
                 var projectsToDelete = Projects
-                    .SelectMany(p => p.ProjectToAssemblySwitches.Select(s => s.FromProjectName))
+                    .SelectMany(p => p.CurrentSwitches.Select(s => s.FromProjectName))
                     .Select(name => Projects.SingleOrDefault(p => p.Name == name))
                     .ToList();
 
                 foreach (var project in Projects)
                 {
-                    foreach (var line in project.ProjectToAssemblySwitches)
+                    foreach (var line in project.CurrentSwitches)
                     {
                         var reference = project.References
                             .FirstOrDefault(r => r.ProjectName == line.FromProjectName);
@@ -166,13 +176,11 @@ namespace NuGetReferenceSwitcher.Presentation.ViewModels
             }, token));
         }
 
-        /// <summary>
-        /// Handles an exception which occured in the <see cref="M:MyToolkit.Mvvm.ViewModelBase.RunTaskAsync(System.Func{System.Threading.CancellationToken,System.Threading.Tasks.Task})"/> method. 
-        /// </summary>
+        /// <summary>Handles an exception which occured in the <see cref="M:MyToolkit.Mvvm.ViewModelBase.RunTaskAsync(System.Func{System.Threading.CancellationToken,System.Threading.Tasks.Task})"/> method. </summary>
         /// <param name="exception">The exception. </param>
         public override void HandleException(Exception exception)
         {
-            MessageBox.Show("Error: " + exception.Message); // TODO: Exception handling
+            MessageBox.Show("Error: " + exception.Message); // TODO: Exception handling        
         }
     }
 }

@@ -4,135 +4,141 @@
         xmlns:converters="clr-namespace:MyToolkit.Converters;assembly=MyToolkit.Extended"
         xmlns:viewModels="clr-namespace:NuGetReferenceSwitcher.Presentation.ViewModels"
         Title="Switch NuGet and Project references" 
-        Height="500" Width="700" ResizeMode="CanResizeWithGrip"
-        WindowStartupLocation="CenterOwner">
-    
+        Height="700" Width="800" ResizeMode="CanResizeWithGrip"
+        WindowStartupLocation="CenterScreen">
+
     <Window.Resources>
         <viewModels:MainDialogModel x:Key="ViewModel" />
         <converters:NotConverter x:Key="NotConverter" />
         <converters:VisibilityConverter x:Key="VisibilityConverter" />
     </Window.Resources>
-    
+
     <Grid DataContext="{StaticResource ViewModel}">
         <TextBlock Text="Please wait..." Margin="8" 
                    Visibility="{Binding IsLoading, Converter={StaticResource VisibilityConverter}}" />
-        
-        <TabControl Margin="0,12,0,0" Visibility="{Binding IsLoading, Converter={StaticResource NotConverter}}">
+
+        <TabControl Margin="0,12,0,0" Visibility="{Binding IsLoading, Converter={StaticResource NotConverter}}" x:Name="Tabs">
             <TabItem Header="Switch to project references">
                 <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="*" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*" />
                         <ColumnDefinition Width="*" />
                     </Grid.ColumnDefinitions>
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="*" />
-                        <RowDefinition Height="Auto" />
-                    </Grid.RowDefinitions>
-                    
-                    <ScrollViewer Margin="0,0,4,0">
-                        <StackPanel Margin="8">
-                            <TextBlock Text="Projects with NuGet DLL references: " FontWeight="Bold" />
-                            <ItemsControl ItemsSource="{Binding Projects}">
-                                <ItemsControl.ItemTemplate>
-                                    <DataTemplate>
-                                        <StackPanel Margin="0,8,0,0">
-                                            <TextBlock Text="{Binding Name}" FontWeight="Bold" Margin="0,0,0,4" />
-                                            <ItemsControl ItemsSource="{Binding NuGetReferences}">
-                                                <ItemsControl.ItemTemplate>
-                                                    <DataTemplate>
-                                                        <TextBlock Text="{Binding Name}" Margin="0,0,0,4" />
-                                                    </DataTemplate>
-                                                </ItemsControl.ItemTemplate>
-                                            </ItemsControl>
-                                        </StackPanel>
-                                    </DataTemplate>
-                                </ItemsControl.ItemTemplate>
-                            </ItemsControl>
-                        </StackPanel>
-                    </ScrollViewer>
 
-                    <ScrollViewer Grid.Column="1">
-                        <StackPanel Margin="8">
-                            <TextBlock Text="NuGet DLL switches: " FontWeight="Bold" />
-                            <ItemsControl ItemsSource="{Binding Switches}" Margin="0,0,0,8">
-                                <ItemsControl.ItemTemplate>
-                                    <DataTemplate>
-                                        <StackPanel Margin="0,8,0,0">
-                                            <TextBlock Text="{Binding FromAssemblyName}" FontWeight="Bold" Margin="0,0,0,4" />
-                                            <TextBlock Text="{Binding FromAssemblyPath}" TextWrapping="Wrap" Margin="0,0,0,4" />
+                    <TextBlock Text="NuGet to Project switches" Grid.Row="0" Grid.Column="0" 
+                               FontWeight="Bold" FontSize="16" Margin="8" />
+                    <ScrollViewer Grid.Row="1" Grid.Column="0">
+                        <ItemsControl ItemsSource="{Binding Switches}" Margin="8">
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <StackPanel Margin="0,0,0,8">
+                                        <TextBlock Text="{Binding FromAssemblyName}" FontWeight="Bold" Margin="0,0,0,4" />
+                                        <TextBlock Text="{Binding FromAssemblyPath}" TextWrapping="Wrap" Margin="0,0,0,4" />
 
-                                            <RadioButton IsChecked="{Binding IsDeactivated, Mode=TwoWay}" 
-                                                         GroupName="{Binding FromAssemblyName}"
-                                                         Content="Do not replace" />
+                                        <RadioButton IsChecked="{Binding IsDeactivated, Mode=TwoWay}" 
+                                                     GroupName="{Binding FromAssemblyName}"
+                                                     Content="Do not replace" Margin="0,0,0,4" />
 
-                                            <RadioButton IsChecked="{Binding IsProjectPathSelected, Mode=TwoWay}" 
-                                                         GroupName="{Binding FromAssemblyName}"
-                                                         Content="Add new Project to Solution" />
+                                        <RadioButton IsChecked="{Binding IsProjectPathSelected, Mode=TwoWay}" 
+                                                     GroupName="{Binding FromAssemblyName}" Margin="0,0,0,4"
+                                                     Content="Add new Project to Solution" />
 
-                                            <RadioButton IsChecked="False" 
-                                                         GroupName="{Binding FromAssemblyName}"
-                                                         Content="Use existing Project" />
+                                        <RadioButton IsChecked="False" Margin="0,0,0,4"
+                                                     GroupName="{Binding FromAssemblyName}"
+                                                     Content="Use existing Project" />
 
-                                            <StackPanel Visibility="{Binding IsDeactivated, Converter={StaticResource NotConverter}}">
-                                                <StackPanel Visibility="{Binding IsProjectPathSelected, Converter={StaticResource VisibilityConverter}}">
-                                                    <Button Content="Select Project to add" Click="ButtonBase_OnClick" Tag="{Binding}" />
-                                                    <TextBlock Text="{Binding ProjectPath}" />
-                                                </StackPanel>
+                                        <StackPanel Visibility="{Binding IsDeactivated, Converter={StaticResource NotConverter}}">
+                                            <StackPanel Visibility="{Binding IsProjectPathSelected, Converter={StaticResource VisibilityConverter}}">
+                                                <Button Content="Select Project to add" Click="OnSelectProjectFile" Tag="{Binding}" />
+                                                <TextBlock Text="{Binding ProjectPath}" TextWrapping="Wrap" Margin="0,4,0,0"
+                                                           Visibility="{Binding ProjectPath, Converter={StaticResource VisibilityConverter}}" />
+                                            </StackPanel>
 
-                                                <StackPanel Visibility="{Binding IsProjectPathSelected, Converter={StaticResource NotConverter}}">
-                                                    <ComboBox ItemsSource="{Binding Projects, Source={StaticResource ViewModel}}"
-                                                              SelectedItem="{Binding ToProject, Mode=TwoWay}"
-                                                              DisplayMemberPath="Name" />
-                                                </StackPanel>
+                                            <StackPanel Visibility="{Binding IsProjectPathSelected, Converter={StaticResource NotConverter}}">
+                                                <ComboBox ItemsSource="{Binding Projects, Source={StaticResource ViewModel}}"
+                                                          SelectedItem="{Binding ToProject, Mode=TwoWay}"
+                                                          DisplayMemberPath="Name" />
                                             </StackPanel>
                                         </StackPanel>
-                                    </DataTemplate>
-                                </ItemsControl.ItemTemplate>
-                            </ItemsControl>
-                        </StackPanel>
+                                    </StackPanel>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
                     </ScrollViewer>
-                    <Button Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" Margin="8" Padding="4"
+
+                    <TextBlock Text="Scanned projects" FontWeight="Bold" FontSize="16" 
+                               Grid.Row="0" Grid.Column="1" Margin="8" />
+                    <ScrollViewer Grid.Row="1" Grid.Column="1">
+                        <ItemsControl ItemsSource="{Binding Projects}" Margin="8">
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <StackPanel Margin="0,0,0,8">
+                                        <TextBlock Text="{Binding Name}" FontWeight="Bold" Margin="0,0,0,4" />
+                                        <TextBlock Text="No NuGet references found." 
+                                                   Visibility="{Binding NuGetReferences.Count, Converter={StaticResource NotConverter}}" />
+                                        <ItemsControl ItemsSource="{Binding NuGetReferences}">
+                                            <ItemsControl.ItemTemplate>
+                                                <DataTemplate>
+                                                    <TextBlock Text="{Binding Name}" Margin="0,0,0,4" />
+                                                </DataTemplate>
+                                            </ItemsControl.ItemTemplate>
+                                        </ItemsControl>
+                                    </StackPanel>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                    </ScrollViewer>
+
+                    <Button Grid.Row="2" Margin="8" Padding="4" Grid.Column="0" Grid.ColumnSpan="2"
                             Content="Switch to Project references" Click="OnSwitchToProjectReferences" />
                 </Grid>
             </TabItem>
             <TabItem Header="Switch to NuGet references">
-                <Grid Margin="8">
+                <Grid>
                     <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
                         <RowDefinition Height="*" />
                         <RowDefinition Height="Auto" />
                     </Grid.RowDefinitions>
-                    
-                    <ScrollViewer>
-                        <StackPanel Margin="8">
-                            <TextBlock Text="Projects with NuGet DLL references: " FontWeight="Bold" />
-                            <ItemsControl ItemsSource="{Binding Projects}">
-                                <ItemsControl.ItemTemplate>
-                                    <DataTemplate>
-                                        <StackPanel Margin="0,8,0,0">
-                                            <TextBlock Text="{Binding Name}" FontWeight="Bold" Margin="0,0,0,4" />
-                                            <ItemsControl ItemsSource="{Binding ProjectToAssemblySwitches}">
-                                                <ItemsControl.ItemTemplate>
-                                                    <DataTemplate>
-                                                        <TextBlock Margin="0,0,0,4" TextWrapping="Wrap">
+
+                    <TextBlock Text="Project to NuGet DLL switches" Grid.Row="0"
+                               FontWeight="Bold" FontSize="16" Margin="8" />
+
+                    <ScrollViewer Grid.Row="1">
+                        <ItemsControl ItemsSource="{Binding Projects}" Margin="8">
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <StackPanel Margin="0,0,0,8">
+                                        <TextBlock Text="{Binding Name}" FontWeight="Bold" Margin="0,0,0,4" />
+                                        <TextBlock Text="No references switched." 
+                                                   Visibility="{Binding CurrentSwitches.Count, Converter={StaticResource NotConverter}}" />
+                                        <ItemsControl ItemsSource="{Binding CurrentSwitches}">
+                                            <ItemsControl.ItemTemplate>
+                                                <DataTemplate>
+                                                    <TextBlock Margin="0,0,0,4" TextWrapping="Wrap">
                                                             <Run Text="From " FontWeight="Bold" />
                                                             <Run Text="{Binding FromProjectName}" />
                                                             <LineBreak />
-                                                            <Run Text=" to " FontWeight="Bold" />
+                                                            <Run Text="To " FontWeight="Bold" />
                                                             <Run Text="{Binding ToAssemblyPath}" />
-                                                        </TextBlock>
-                                                    </DataTemplate>
-                                                </ItemsControl.ItemTemplate>
-                                            </ItemsControl>
-                                        </StackPanel>
-                                    </DataTemplate>
-                                </ItemsControl.ItemTemplate>
-                            </ItemsControl>
-                        </StackPanel>
+                                                    </TextBlock>
+                                                </DataTemplate>
+                                            </ItemsControl.ItemTemplate>
+                                        </ItemsControl>
+                                    </StackPanel>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
                     </ScrollViewer>
-                    
-                    <StackPanel Margin="8" Grid.Row="1">
+
+                    <StackPanel Margin="8" Grid.Row="2">
                         <CheckBox Content="Remove Projects from Solution" Margin="0,0,0,8"
-                                      IsChecked="{Binding RemoveProjects, Mode=TwoWay}" />
+                                  IsChecked="{Binding RemoveProjects, Mode=TwoWay}" />
                         <Button Content="Switch to NuGet references" Click="OnSwitchToNuGetReferences" Padding="4" />
                     </StackPanel>
                 </Grid>

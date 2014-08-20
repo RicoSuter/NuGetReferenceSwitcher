@@ -1,3 +1,11 @@
+//-----------------------------------------------------------------------
+// <copyright file="ProjectModel.cs" company="MyToolkit">
+//     Copyright (c) Rico Suter. All rights reserved.
+// </copyright>
+// <license>http://nugetreferenceswitcher.codeplex.com/license</license>
+// <author>Rico Suter, mail@rsuter.com</author>
+//-----------------------------------------------------------------------
+
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -26,32 +34,24 @@ namespace NuGetReferenceSwitcher.Presentation.Domain
 
         public ExtendedObservableCollection<ReferenceModel> NuGetReferences { get; private set; }
 
-        public string ConfigurationPath
+        public string CurrentConfigurationPath
         {
-            get
-            {
-                var projectPath = _vsProject.Project.FileName;
-                var projectDirectory = System.IO.Path.GetDirectoryName(projectPath);
-                if (projectDirectory != null)
-                    return System.IO.Path.Combine(projectDirectory, "NuGetReferenceSwitcher.cfg");
-                throw new IOException();
-            }
+            get { return GetConfigurationPath(".nugetreferenceswitcher"); }
         }
 
-        public IEnumerable<FromProjectToAssemblySwitch> ProjectToAssemblySwitches
+        public string DefaultConfigurationPath
         {
-            get
-            {
-                if (File.Exists(ConfigurationPath))
-                {
-                    var lines = File.ReadAllLines(ConfigurationPath)
-                        .Select(l => l.Split('\t'))
-                        .Where(l => l.Length == 2).ToArray();
+            get { return GetConfigurationPath(".default.nugetreferenceswitcher"); }
+        }
+        
+        public List<FromProjectToAssemblySwitch> CurrentSwitches
+        {
+            get { return GetSwitches(CurrentConfigurationPath); }
+        }
 
-                    foreach (var line in lines)
-                        yield return new FromProjectToAssemblySwitch { FromProjectName = line[0], ToAssemblyPath = line[1] };
-                }
-            }
+        public List<FromProjectToAssemblySwitch> DefaultSwitches
+        {
+            get { return GetSwitches(DefaultConfigurationPath); }
         }
 
         public string Path
@@ -60,9 +60,37 @@ namespace NuGetReferenceSwitcher.Presentation.Domain
         }
 
         public void DeleteConfigurationFile()
+        {               
+            if (File.Exists(CurrentConfigurationPath))
+            {
+                if (File.Exists(DefaultConfigurationPath))
+                    File.Delete(DefaultConfigurationPath);
+
+                File.Move(CurrentConfigurationPath, DefaultConfigurationPath);
+            }
+        }
+
+        private string GetConfigurationPath(string fileExtension)
         {
-            if (File.Exists(ConfigurationPath))
-                File.Delete(ConfigurationPath);
+            var projectPath = _vsProject.Project.FileName;
+            var projectDirectory = System.IO.Path.GetDirectoryName(projectPath);
+            var projectName = System.IO.Path.GetFileNameWithoutExtension(projectPath);
+            return System.IO.Path.Combine(projectDirectory, projectName + fileExtension);
+        }
+
+        private List<FromProjectToAssemblySwitch> GetSwitches(string configurationPath)
+        {
+            var list = new List<FromProjectToAssemblySwitch>();
+            if (File.Exists(configurationPath))
+            {
+                var lines = File.ReadAllLines(configurationPath)
+                    .Select(l => l.Split('\t'))
+                    .Where(l => l.Length == 3).ToArray();
+
+                foreach (var line in lines)
+                    list.Add(new FromProjectToAssemblySwitch { FromProjectName = line[0], FromProjectPath = line[1], ToAssemblyPath = line[2] });
+            }
+            return list;
         }
 
         private void LoadReferences()
@@ -70,12 +98,12 @@ namespace NuGetReferenceSwitcher.Presentation.Domain
             References = new ExtendedObservableCollection<ReferenceModel>();
             NuGetReferences = new ExtendedObservableCollection<ReferenceModel>();
 
-            foreach (var reference in _vsProject.References.OfType<Reference>())
+            foreach (var vsReference in _vsProject.References.OfType<Reference>())
             {
-                var x = new ReferenceModel(reference);
-                References.Add(x);
-                if (reference.Path.Contains("/packages/") || reference.Path.Contains("\\packages\\"))
-                    NuGetReferences.Add(x);
+                var reference = new ReferenceModel(vsReference);
+                References.Add(reference);
+                if (vsReference.Path.Contains("/packages/") || vsReference.Path.Contains("\\packages\\"))
+                    NuGetReferences.Add(reference);
             }
         }
 

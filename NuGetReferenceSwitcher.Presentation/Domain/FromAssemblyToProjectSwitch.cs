@@ -1,3 +1,13 @@
+//-----------------------------------------------------------------------
+// <copyright file="FromAssemblyToProjectSwitch.cs" company="MyToolkit">
+//     Copyright (c) Rico Suter. All rights reserved.
+// </copyright>
+// <license>http://nugetreferenceswitcher.codeplex.com/license</license>
+// <author>Rico Suter, mail@rsuter.com</author>
+//-----------------------------------------------------------------------
+
+using System.Collections.Generic;
+using System.Linq;
 using MyToolkit.Model;
 
 namespace NuGetReferenceSwitcher.Presentation.Domain
@@ -8,12 +18,28 @@ namespace NuGetReferenceSwitcher.Presentation.Domain
         private bool _isProjectPathSelected;
         private bool _isDeactivated;
 
-        public FromAssemblyToProjectSwitch(ReferenceModel assemblyReference)
+        public FromAssemblyToProjectSwitch(List<ProjectModel> projects, ReferenceModel assemblyReference)
         {
             FromAssemblyName = assemblyReference.Name;
             FromAssemblyPath = assemblyReference.Path;
 
-            IsDeactivated = true;
+            var swi = projects.SelectMany(p => p.DefaultSwitches).SingleOrDefault(s => s.ToAssemblyPath == FromAssemblyPath);
+            if (swi != null)
+            {
+                var targetProject = projects.FirstOrDefault(p => p.DefaultSwitches.Contains(swi));
+                if (targetProject == null)
+                {
+                    ProjectPath = swi.FromProjectPath;
+                    IsProjectPathSelected = true;
+                }
+                else
+                {
+                    ToProject = projects.First(p => p.DefaultSwitches.Contains(swi));
+                    IsProjectPathSelected = false;
+                }
+            }
+            else
+                IsDeactivated = true;
         }
 
         public string FromAssemblyName { get; set; }
