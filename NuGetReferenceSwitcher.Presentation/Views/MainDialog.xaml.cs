@@ -6,16 +6,17 @@
 // <author>Rico Suter, mail@rsuter.com</author>
 //-----------------------------------------------------------------------
 
-using System;
 using System.Linq;
 using System.Windows;
 using System.Windows.Forms;
+using System.Windows.Input;
 using EnvDTE;
 using MyToolkit.Collections;
 using MyToolkit.Mvvm;
 using NuGetReferenceSwitcher.Presentation.Domain;
 using NuGetReferenceSwitcher.Presentation.ViewModels;
 using Button = System.Windows.Controls.Button;
+using KeyEventArgs = System.Windows.Input.KeyEventArgs;
 using Window = System.Windows.Window;
 
 namespace NuGetReferenceSwitcher.Presentation.Views
@@ -26,21 +27,31 @@ namespace NuGetReferenceSwitcher.Presentation.Views
         public MainDialog(DTE application)
         {
             InitializeComponent();
+
             Model.Application = application;
             Model.Dispatcher = Dispatcher;
+
             ViewModelHelper.RegisterViewModel(Model, this);
+
             Model.Projects.ExtendedCollectionChanged += OnProjectsChanged;
+            KeyUp += OnKeyUp;
+        }
+
+        public MainDialogModel Model
+        {
+            get { return (MainDialogModel)Resources["ViewModel"]; }
+        }
+
+        private void OnKeyUp(object sender, KeyEventArgs args)
+        {
+            if (args.Key == Key.Escape)
+                Close();
         }
 
         private void OnProjectsChanged(object sender, ExtendedNotifyCollectionChangedEventArgs<ProjectModel> args)
         {
             if (Model.Projects.Any(p => p.CurrentSwitches.Any()))
                 Tabs.SelectedIndex = 1;
-        }
-
-        public MainDialogModel Model
-        {
-            get { return (MainDialogModel)Resources["ViewModel"]; }
         }
 
         private async void OnSwitchToProjectReferences(object sender, RoutedEventArgs e)
@@ -57,12 +68,11 @@ namespace NuGetReferenceSwitcher.Presentation.Views
 
         private void OnSelectProjectFile(object sender, RoutedEventArgs e)
         {
-            var swi = (FromAssemblyToProjectSwitch)((Button)sender).Tag;
-
+            var fntpSwitch = (FromNuGetToProjectSwitch)((Button)sender).Tag;
             var dlg = new OpenFileDialog();
             dlg.Filter = "Project Files (*.csproj)|*.csproj";
             if (dlg.ShowDialog() == System.Windows.Forms.DialogResult.OK)
-                swi.ProjectPath = dlg.FileName;
+                fntpSwitch.ProjectPath = dlg.FileName;
         }
     }
 }

@@ -26,22 +26,28 @@ namespace NuGetReferenceSwitcher.Presentation.ViewModels
         public MainDialogModel()
         {
             Projects = new ExtendedObservableCollection<ProjectModel>();
-            Switches = new ExtendedObservableCollection<FromAssemblyToProjectSwitch>();
+            Switches = new ExtendedObservableCollection<FromNuGetToProjectSwitch>();
 
             RemoveProjects = true;
             SaveProjects = true;
         }
 
+        /// <summary>Gets the projects of the current solution. </summary>
         public ExtendedObservableCollection<ProjectModel> Projects { get; private set; }
 
-        public ExtendedObservableCollection<FromAssemblyToProjectSwitch> Switches { get; private set; }
+        /// <summary>Gets the NuGet to project switches which are shown in the first tab. </summary>
+        public ExtendedObservableCollection<FromNuGetToProjectSwitch> Switches { get; private set; }
 
+        /// <summary>Gets or sets a value indicating whether the changed projects should be saved. </summary>
         public bool SaveProjects { get; set; }
 
+        /// <summary>Gets or sets a value indicating whether the previously referenced projects should be removed. </summary>
         public bool RemoveProjects { get; set; }
 
+        /// <summary>Gets or sets the Visual Studio application object. </summary>
         public DTE Application { get; set; }
 
+        /// <summary>Gets or sets the used UI dispatcher. </summary>
         public Dispatcher Dispatcher { get; set; }
 
         /// <summary>Initializes the view model. Must only be called once per view model instance 
@@ -67,9 +73,11 @@ namespace NuGetReferenceSwitcher.Presentation.ViewModels
             Switches.Initialize(projects
                 .SelectMany(p => p.NuGetReferences)
                 .GroupBy(r => r.Name)
-                .Select(g => new FromAssemblyToProjectSwitch(projects, g.First())));
+                .Select(g => new FromNuGetToProjectSwitch(projects, g.First())));
         }
 
+        /// <summary>Switches the NuGet DLL references to the selected project references. </summary>
+        /// <returns>The task. </returns>
         public async Task SwitchToProjectReferencesAsync()
         {
             await RunTaskAsync(token => Task.Run(() =>
@@ -125,16 +133,18 @@ namespace NuGetReferenceSwitcher.Presentation.ViewModels
             }, token));
         }
 
-        private void AddProjectToSolution(FromAssemblyToProjectSwitch fromAssemblyToProjectSwitch)
+        private void AddProjectToSolution(FromNuGetToProjectSwitch fromNuGetToProjectSwitch)
         {
-            if (fromAssemblyToProjectSwitch.IsProjectPathSelected)
+            if (fromNuGetToProjectSwitch.IsProjectPathSelected)
             {
-                var project = Application.Solution.AddFromFile(fromAssemblyToProjectSwitch.ProjectPath);
+                var project = Application.Solution.AddFromFile(fromNuGetToProjectSwitch.ProjectPath);
                 var myProject = new ProjectModel((VSProject)project.Object);
-                fromAssemblyToProjectSwitch.ToProjectFromPath = myProject;
+                fromNuGetToProjectSwitch.ToProjectFromPath = myProject;
             }
         }
 
+        /// <summary>Switches the project references to the previously referenced NuGet DLLs. </summary>
+        /// <returns>The task. </returns>
         public async Task SwitchToNuGetReferencesAsync()
         {
             await RunTaskAsync(token => Task.Run(() =>
@@ -143,7 +153,7 @@ namespace NuGetReferenceSwitcher.Presentation.ViewModels
                     .SelectMany(p => p.CurrentSwitches.Select(s => s.FromProjectName))
                     .Select(name => Projects.SingleOrDefault(p => p.Name == name))
                     .ToList();
-
+                
                 foreach (var project in Projects)
                 {
                     foreach (var line in project.CurrentSwitches)
@@ -167,7 +177,8 @@ namespace NuGetReferenceSwitcher.Presentation.ViewModels
                 if (RemoveProjects)
                 {
                     var order = ProjectDependencyResolver.GetBuildOrder(projectsToDelete.Select(p => p.Path)).ToList();
-                    foreach (var project in projectsToDelete.OrderBy(p => order.IndexOf(p.Path) * -1))
+                    var projects = projectsToDelete.OrderByDescending(p => order.IndexOf(p.Path)).ToList();
+                    foreach (var project in projects)
                     {
                         if (project != null)
                             project.RemoveFromSolution(Application.Solution);
@@ -180,7 +191,7 @@ namespace NuGetReferenceSwitcher.Presentation.ViewModels
         /// <param name="exception">The exception. </param>
         public override void HandleException(Exception exception)
         {
-            MessageBox.Show("Error: " + exception.Message); // TODO: Exception handling        
+            MessageBox.Show(exception.Message, "An error occurred"); 
         }
     }
 }

@@ -6,7 +6,6 @@
 // <author>Rico Suter, mail@rsuter.com</author>
 //-----------------------------------------------------------------------
 
-using EnvDTE;
 using VSLangProj;
 
 namespace NuGetReferenceSwitcher.Presentation.Domain
@@ -24,12 +23,16 @@ namespace NuGetReferenceSwitcher.Presentation.Domain
             ProjectName = _reference.SourceProject != null ? _reference.SourceProject.Name : null;
         }
 
+        /// <summary>Gets the name of the reference. </summary>
         public string Name { get; private set; }
 
+        /// <summary>Gets or sets the referenced path. </summary>
         public string Path { get; set; }
 
+        /// <summary>Gets the referenced project name if this is a project reference otherwise null. </summary>
         public string ProjectName { get; private set; }
 
+        /// <summary>Removes the reference from the project. </summary>
         public void Remove()
         {
             _reference.Remove();

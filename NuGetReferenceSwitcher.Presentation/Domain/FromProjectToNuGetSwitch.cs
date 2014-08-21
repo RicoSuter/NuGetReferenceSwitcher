@@ -1,5 +1,5 @@
 //-----------------------------------------------------------------------
-// <copyright file="FromProjectToAssemblySwitch.cs" company="MyToolkit">
+// <copyright file="FromProjectToNuGetSwitch.cs" company="MyToolkit">
 //     Copyright (c) Rico Suter. All rights reserved.
 // </copyright>
 // <license>http://nugetreferenceswitcher.codeplex.com/license</license>
@@ -8,7 +8,7 @@
 
 namespace NuGetReferenceSwitcher.Presentation.Domain
 {
-    public class FromProjectToAssemblySwitch
+    public class FromProjectToNuGetSwitch
     {
         public string FromProjectName { get; set; }
         public string FromProjectPath { get; set; }

@@ -11,6 +11,7 @@ using System.Diagnostics;
 using System.Globalization;
 using System.Runtime.InteropServices;
 using System.ComponentModel.Design;
+using System.Windows;
 using System.Windows.Interop;
 using EnvDTE;
 using Microsoft.VisualStudio.Shell.Interop;
@@ -51,10 +52,20 @@ namespace RicoSuter.NuGetReferenceSwitcher
         private void OnShowDialog(object sender, EventArgs e)
         {
             var application = (DTE)GetService(typeof(SDTE));
-            var window = new MainDialog(application);
-            var helper = new WindowInteropHelper(window);
-            helper.Owner = (IntPtr) application.MainWindow.HWnd;
-            window.ShowDialog();
+            if (application.Solution == null)
+                MessageBox.Show("Please open a Solution first. ", "Solution not open");
+            else
+            {
+                if (application.Solution.IsDirty) // solution must be saved otherwise adding/removing projects will raise errors
+                    MessageBox.Show("Please save your Solution first. ", "Solution not saved");
+                else
+                {
+                    var window = new MainDialog(application);
+                    var helper = new WindowInteropHelper(window);
+                    helper.Owner = (IntPtr)application.MainWindow.HWnd;
+                    window.ShowDialog();
+                }
+            }
         }
     }
 }

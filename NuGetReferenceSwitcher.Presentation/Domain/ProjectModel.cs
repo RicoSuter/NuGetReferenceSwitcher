@@ -44,12 +44,12 @@ namespace NuGetReferenceSwitcher.Presentation.Domain
             get { return GetConfigurationPath(".default.nugetreferenceswitcher"); }
         }
         
-        public List<FromProjectToAssemblySwitch> CurrentSwitches
+        public List<FromProjectToNuGetSwitch> CurrentSwitches
         {
             get { return GetSwitches(CurrentConfigurationPath); }
         }
 
-        public List<FromProjectToAssemblySwitch> DefaultSwitches
+        public List<FromProjectToNuGetSwitch> DefaultSwitches
         {
             get { return GetSwitches(DefaultConfigurationPath); }
         }
@@ -78,9 +78,9 @@ namespace NuGetReferenceSwitcher.Presentation.Domain
             return System.IO.Path.Combine(projectDirectory, projectName + fileExtension);
         }
 
-        private List<FromProjectToAssemblySwitch> GetSwitches(string configurationPath)
+        private List<FromProjectToNuGetSwitch> GetSwitches(string configurationPath)
         {
-            var list = new List<FromProjectToAssemblySwitch>();
+            var list = new List<FromProjectToNuGetSwitch>();
             if (File.Exists(configurationPath))
             {
                 var lines = File.ReadAllLines(configurationPath)
@@ -88,7 +88,7 @@ namespace NuGetReferenceSwitcher.Presentation.Domain
                     .Where(l => l.Length == 3).ToArray();
 
                 foreach (var line in lines)
-                    list.Add(new FromProjectToAssemblySwitch { FromProjectName = line[0], FromProjectPath = line[1], ToAssemblyPath = line[2] });
+                    list.Add(new FromProjectToNuGetSwitch { FromProjectName = line[0], FromProjectPath = line[1], ToAssemblyPath = line[2] });
             }
             return list;
         }
@@ -124,6 +124,7 @@ namespace NuGetReferenceSwitcher.Presentation.Domain
 
         public void RemoveFromSolution(Solution solution)
         {
+            _vsProject.Refresh();
             solution.Remove(_vsProject.Project);
         }
     }
