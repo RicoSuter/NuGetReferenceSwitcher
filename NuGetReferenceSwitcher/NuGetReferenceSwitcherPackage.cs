@@ -7,8 +7,6 @@
 //-----------------------------------------------------------------------
 
 using System;
-using System.Diagnostics;
-using System.Globalization;
 using System.Runtime.InteropServices;
 using System.ComponentModel.Design;
 using System.Windows;
@@ -26,15 +24,12 @@ namespace RicoSuter.NuGetReferenceSwitcher
     [Guid(GuidList.guidNuGetReferenceSwitcherPkgString)]
     public sealed class NuGetReferenceSwitcherPackage : Package
     {
-        #region Package Members
-
         /// <summary>
         /// Initialization of the package; this method is called right after the package is sited, so this is the place
         /// where you can put all the initialization code that rely on services provided by VisualStudio.
         /// </summary>
         protected override void Initialize()
         {
-            Debug.WriteLine(string.Format(CultureInfo.CurrentCulture, "Entering Initialize() of: {0}", this.ToString()));
             base.Initialize();
 
             // Add our command handlers for menu (commands must exist in the .vsct file)
@@ -47,17 +42,16 @@ namespace RicoSuter.NuGetReferenceSwitcher
                 mcs.AddCommand(menuItem);
             }
         }
-        #endregion
 
         private void OnShowDialog(object sender, EventArgs e)
         {
             var application = (DTE)GetService(typeof(SDTE));
-            if (application.Solution == null)
-                MessageBox.Show("Please open a Solution first. ", "Solution not open");
+            if (application.Solution == null || !application.Solution.IsOpen)
+                MessageBox.Show("Please open a solution first. ", "No solution");
             else
             {
                 if (application.Solution.IsDirty) // solution must be saved otherwise adding/removing projects will raise errors
-                    MessageBox.Show("Please save your Solution first. \n" +
+                    MessageBox.Show("Please save your solution first. \n" +
                                     "Select the solution in the Solution Explorer and press Ctrl-S. ", 
                                     "Solution not saved");
                 else

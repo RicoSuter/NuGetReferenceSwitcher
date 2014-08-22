@@ -18,7 +18,7 @@
                    Visibility="{Binding IsLoading, Converter={StaticResource VisibilityConverter}}" />
 
         <TabControl Margin="0,12,0,0" Visibility="{Binding IsLoading, Converter={StaticResource NotConverter}}" x:Name="Tabs">
-            <TabItem Header="Switch to project references">
+            <TabItem Header="Switch to Project references">
                 <Grid>
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto" />
@@ -144,23 +144,24 @@
             </TabItem>
             <TabItem Header="About">
                 <StackPanel Margin="8">
-                    <TextBlock Margin="0,0,0,8" FontSize="16">
+                    <TextBlock Margin="0,0,0,8" FontSize="14">
                         NuGet Reference Switcher has been developed by 
-                        <Hyperlink NavigateUri="http://www.rsuter.com" Click="OnOpenHyperlink"><Run Text="Rico Suter"/></Hyperlink>.
+                        <Hyperlink NavigateUri="http://www.rsuter.com" Click="OnOpenHyperlink">Rico Suter</Hyperlink>.
+                    </TextBlock>
+                    <TextBlock Margin="0,0,0,8" FontSize="14" FontWeight="Bold">
+                        Read 
+                        <Hyperlink NavigateUri="https://nugetreferenceswitcher.codeplex.com/wikipage?title=Guide" 
+                                   Click="OnOpenHyperlink">this guide</Hyperlink>
+                        about how to use the extension.
                     </TextBlock>
                     <TextBlock Margin="0,0,0,8">
-                        Version: <Run Text="{Binding ExtensionVersion, Mode=OneWay}" />
-                    </TextBlock>
-                    <TextBlock Margin="0,0,0,8">
-                        Read
-                        <Hyperlink NavigateUri="https://nugetreferenceswitcher.codeplex.com/wikipage?title=Introduction" 
-                                   Click="OnOpenHyperlink"><Run Text="this article"/></Hyperlink>
-                        on how to use the extension.
+                        Version: <Run Text="{Binding ExtensionVersion, Mode=OneWay}" />, 
+                        License: <Hyperlink NavigateUri="https://nugetreferenceswitcher.codeplex.com/license" Click="OnOpenHyperlink">Ms-PL</Hyperlink>
                     </TextBlock>
                     <TextBlock Text="Components" FontWeight="Bold" Margin="0,0,0,4" />
                     <TextBlock Margin="0,0,0,4">
-                        - <Hyperlink NavigateUri="http://mytoolkit.codeplex.com" Click="OnOpenHyperlink"><Run 
-                            Text="MyToolkit"/></Hyperlink>: .NET library with MVVM classes, controls and more components.
+                        - <Hyperlink NavigateUri="http://mytoolkit.codeplex.com" Click="OnOpenHyperlink">MyToolkit</Hyperlink>: 
+                          .NET library with MVVM classes, controls and more components.
                     </TextBlock>
                 </StackPanel>
             </TabItem>
