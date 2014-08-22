@@ -174,12 +174,22 @@
     <None Include="Resources\Images.png" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="MyToolkit.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="MyToolkit.Extended.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
     <Content Include="Resources\Package.ico" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\NuGetReferenceSwitcher.Presentation\NuGetReferenceSwitcher.Presentation.csproj">
       <Project>{72D2BBE2-B1F7-4782-B7BD-CA377F895746}</Project>
       <Name>NuGetReferenceSwitcher.Presentation</Name>
+      <IncludeOutputGroupsInVSIX>BuiltProjectOutputGroup%3bBuiltProjectOutputGroupDependencies%3bGetCopyToOutputDirectoryItems%3bSatelliteDllsProjectOutputGroup%3b</IncludeOutputGroupsInVSIX>
+      <IncludeOutputGroupsInVSIXLocalOnly>DebugSymbolsProjectOutputGroup%3b</IncludeOutputGroupsInVSIXLocalOnly>
     </ProjectReference>
   </ItemGroup>
   <PropertyGroup>

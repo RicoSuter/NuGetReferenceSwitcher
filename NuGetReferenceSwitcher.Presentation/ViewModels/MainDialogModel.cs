@@ -1,5 +1,5 @@
 ﻿//-----------------------------------------------------------------------
-// <copyright file="MainDialogModel.cs" company="MyToolkit">
+// <copyright file="MainDialogModel.cs" company="NuGet Reference Switcher">
 //     Copyright (c) Rico Suter. All rights reserved.
 // </copyright>
 // <license>http://nugetreferenceswitcher.codeplex.com/license</license>
