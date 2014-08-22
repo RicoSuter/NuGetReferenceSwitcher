@@ -8,6 +8,7 @@
 
 using System.Linq;
 using System.Windows;
+using System.Windows.Documents;
 using System.Windows.Forms;
 using System.Windows.Input;
 using EnvDTE;
@@ -42,6 +43,12 @@ namespace NuGetReferenceSwitcher.Presentation.Views
             get { return (MainDialogModel)Resources["ViewModel"]; }
         }
 
+        private void OnOpenHyperlink(object sender, RoutedEventArgs e)
+        {
+            var uri = ((Hyperlink)sender).NavigateUri;
+            System.Diagnostics.Process.Start(uri.ToString());
+        }
+
         private void OnKeyUp(object sender, KeyEventArgs args)
         {
             if (args.Key == Key.Escape)
@@ -50,7 +57,7 @@ namespace NuGetReferenceSwitcher.Presentation.Views
 
         private void OnProjectsChanged(object sender, ExtendedNotifyCollectionChangedEventArgs<ProjectModel> args)
         {
-            if (Model.Projects.Any(p => p.CurrentSwitches.Any()))
+            if (Model.Projects.Any(p => p.CurrentToNuGetTransformations.Any()))
                 Tabs.SelectedIndex = 1;
         }
 
@@ -68,11 +75,11 @@ namespace NuGetReferenceSwitcher.Presentation.Views
 
         private void OnSelectProjectFile(object sender, RoutedEventArgs e)
         {
-            var fntpSwitch = (FromNuGetToProjectSwitch)((Button)sender).Tag;
+            var fntpSwitch = (FromNuGetToProjectTransformation)((Button)sender).Tag;
             var dlg = new OpenFileDialog();
             dlg.Filter = "Project Files (*.csproj)|*.csproj";
             if (dlg.ShowDialog() == System.Windows.Forms.DialogResult.OK)
-                fntpSwitch.ProjectPath = dlg.FileName;
+                fntpSwitch.ToProjectPath = dlg.FileName;
         }
     }
 }

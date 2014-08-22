@@ -57,7 +57,9 @@ namespace RicoSuter.NuGetReferenceSwitcher
             else
             {
                 if (application.Solution.IsDirty) // solution must be saved otherwise adding/removing projects will raise errors
-                    MessageBox.Show("Please save your Solution first. ", "Solution not saved");
+                    MessageBox.Show("Please save your Solution first. \n" +
+                                    "Select the solution in the Solution Explorer and press Ctrl-S. ", 
+                                    "Solution not saved");
                 else
                 {
                     var window = new MainDialog(application);

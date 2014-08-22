@@ -6,7 +6,6 @@
 // <author>Rico Suter, mail@rsuter.com</author>
 //-----------------------------------------------------------------------
 
-using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -28,46 +27,84 @@ namespace NuGetReferenceSwitcher.Presentation.Domain
             LoadReferences();
         }
 
-        public string Name { get; set; }
+        /// <summary>Gets the name of the project. </summary>
+        public string Name { get; private set; }
 
+        /// <summary>Gets the project's references. </summary>
         public ExtendedObservableCollection<ReferenceModel> References { get; private set; }
 
+        /// <summary>Gets the project's NuGet references (subset of References). </summary>
         public ExtendedObservableCollection<ReferenceModel> NuGetReferences { get; private set; }
 
+        /// <summary>Gets the path of the current configuration. </summary>
         public string CurrentConfigurationPath
         {
             get { return GetConfigurationPath(".nugetreferenceswitcher"); }
         }
 
-        public string DefaultConfigurationPath
+        /// <summary>Gets the path of the previous configuration. </summary>
+        public string PreviousConfigurationPath
         {
-            get { return GetConfigurationPath(".default.nugetreferenceswitcher"); }
+            get { return GetConfigurationPath(".previous.nugetreferenceswitcher"); }
         }
         
-        public List<FromProjectToNuGetSwitch> CurrentSwitches
+        /// <summary>Gets the current project reference to NuGet reference transformations. </summary>
+        public List<FromProjectToNuGetTransformation> CurrentToNuGetTransformations
         {
-            get { return GetSwitches(CurrentConfigurationPath); }
+            get { return LoadTransformationsFromFile(CurrentConfigurationPath); }
         }
 
-        public List<FromProjectToNuGetSwitch> DefaultSwitches
+        /// <summary>Gets the previous project reference to NuGet reference transformations. </summary>
+        public List<FromProjectToNuGetTransformation> PreviousToNuGetTransformations
         {
-            get { return GetSwitches(DefaultConfigurationPath); }
+            get { return LoadTransformationsFromFile(PreviousConfigurationPath); }
         }
 
+        /// <summary>Gets the project file path. </summary>
         public string Path
         {
             get { return _vsProject.Project.FileName; }
         }
 
+        /// <summary>Deletes the preivous configuration file and renames the current 
+        /// configuration file to the path of the previous configuration file.  </summary>
         public void DeleteConfigurationFile()
         {               
             if (File.Exists(CurrentConfigurationPath))
             {
-                if (File.Exists(DefaultConfigurationPath))
-                    File.Delete(DefaultConfigurationPath);
+                if (File.Exists(PreviousConfigurationPath))
+                    File.Delete(PreviousConfigurationPath);
 
-                File.Move(CurrentConfigurationPath, DefaultConfigurationPath);
+                File.Move(CurrentConfigurationPath, PreviousConfigurationPath);
             }
+        }
+
+        /// <summary>Adds a project reference to the project. </summary>
+        /// <param name="project">The project to add. </param>
+        public void AddProjectReference(ProjectModel project)
+        {
+            _vsProject.References.AddProject(project._vsProject.Project);
+        }
+
+        /// <summary>Saves the project. </summary>
+        public void Save()
+        {
+            _vsProject.Project.Save();
+        }
+
+        /// <summary>Adds an assembly reference to the project. </summary>
+        /// <param name="assemblyPath">The assembly path. </param>
+        public void AddReference(string assemblyPath)
+        {
+            _vsProject.References.Add(assemblyPath);
+        }
+
+        /// <summary>Removes the project from the solution. </summary>
+        /// <param name="solution">The solution to remove the project from. </param>
+        public void RemoveFromSolution(Solution solution)
+        {
+            _vsProject.Refresh();
+            solution.Remove(_vsProject.Project);
         }
 
         private string GetConfigurationPath(string fileExtension)
@@ -78,9 +115,9 @@ namespace NuGetReferenceSwitcher.Presentation.Domain
             return System.IO.Path.Combine(projectDirectory, projectName + fileExtension);
         }
 
-        private List<FromProjectToNuGetSwitch> GetSwitches(string configurationPath)
+        private List<FromProjectToNuGetTransformation> LoadTransformationsFromFile(string configurationPath)
         {
-            var list = new List<FromProjectToNuGetSwitch>();
+            var list = new List<FromProjectToNuGetTransformation>();
             if (File.Exists(configurationPath))
             {
                 var lines = File.ReadAllLines(configurationPath)
@@ -88,7 +125,7 @@ namespace NuGetReferenceSwitcher.Presentation.Domain
                     .Where(l => l.Length == 3).ToArray();
 
                 foreach (var line in lines)
-                    list.Add(new FromProjectToNuGetSwitch { FromProjectName = line[0], FromProjectPath = line[1], ToAssemblyPath = line[2] });
+                    list.Add(new FromProjectToNuGetTransformation { FromProjectName = line[0], FromProjectPath = line[1], ToAssemblyPath = line[2] });
             }
             return list;
         }
@@ -105,27 +142,6 @@ namespace NuGetReferenceSwitcher.Presentation.Domain
                 if (vsReference.Path.Contains("/packages/") || vsReference.Path.Contains("\\packages\\"))
                     NuGetReferences.Add(reference);
             }
-        }
-
-        public void AddProject(ProjectModel project)
-        {
-            _vsProject.References.AddProject(project._vsProject.Project);
-        }
-
-        public void Save()
-        {
-            _vsProject.Project.Save();
-        }
-
-        public void AddReference(string assemblyPath)
-        {
-            _vsProject.References.Add(assemblyPath);
-        }
-
-        public void RemoveFromSolution(Solution solution)
-        {
-            _vsProject.Refresh();
-            solution.Remove(_vsProject.Project);
         }
     }
 }

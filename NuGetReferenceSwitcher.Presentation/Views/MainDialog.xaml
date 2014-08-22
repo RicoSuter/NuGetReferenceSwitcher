@@ -33,7 +33,7 @@
                     <TextBlock Text="NuGet to Project switches" Grid.Row="0" Grid.Column="0" 
                                FontWeight="Bold" FontSize="16" Margin="8" />
                     <ScrollViewer Grid.Row="1" Grid.Column="0">
-                        <ItemsControl ItemsSource="{Binding Switches}" Margin="8">
+                        <ItemsControl ItemsSource="{Binding Transformations}" Margin="8">
                             <ItemsControl.ItemTemplate>
                                 <DataTemplate>
                                     <StackPanel Margin="0,0,0,8">
@@ -55,8 +55,8 @@
                                         <StackPanel Visibility="{Binding IsDeactivated, Converter={StaticResource NotConverter}}">
                                             <StackPanel Visibility="{Binding IsProjectPathSelected, Converter={StaticResource VisibilityConverter}}">
                                                 <Button Content="Select Project to add" Click="OnSelectProjectFile" Tag="{Binding}" />
-                                                <TextBlock Text="{Binding ProjectPath}" TextWrapping="Wrap" Margin="0,4,0,0"
-                                                           Visibility="{Binding ProjectPath, Converter={StaticResource VisibilityConverter}}" />
+                                                <TextBlock Text="{Binding ToProjectPath}" TextWrapping="Wrap" Margin="0,4,0,0"
+                                                           Visibility="{Binding ToProjectPath, Converter={StaticResource VisibilityConverter}}" />
                                             </StackPanel>
 
                                             <StackPanel Visibility="{Binding IsProjectPathSelected, Converter={StaticResource NotConverter}}">
@@ -116,8 +116,8 @@
                                     <StackPanel Margin="0,0,0,8">
                                         <TextBlock Text="{Binding Name}" FontWeight="Bold" Margin="0,0,0,4" />
                                         <TextBlock Text="No references switched." 
-                                                   Visibility="{Binding CurrentSwitches.Count, Converter={StaticResource NotConverter}}" />
-                                        <ItemsControl ItemsSource="{Binding CurrentSwitches}">
+                                                   Visibility="{Binding CurrentToNuGetTransformations.Count, Converter={StaticResource NotConverter}}" />
+                                        <ItemsControl ItemsSource="{Binding CurrentToNuGetTransformations}">
                                             <ItemsControl.ItemTemplate>
                                                 <DataTemplate>
                                                     <TextBlock Margin="0,0,0,4" TextWrapping="Wrap">
@@ -142,6 +142,26 @@
                         <Button Content="Switch to NuGet references" Click="OnSwitchToNuGetReferences" Padding="4" />
                     </StackPanel>
                 </Grid>
+            </TabItem>
+            <TabItem Header="About">
+                <StackPanel>
+                    <TextBlock Margin="0,0,0,4" FontSize="16">
+                        NuGet Reference Switcher has been developed by 
+                        <Hyperlink NavigateUri="http://www.rsuter.com" Click="OnOpenHyperlink"><Run Text="Rico Suter"/></Hyperlink>.
+                    </TextBlock>
+                    <TextBlock Margin="0,0,0,4">
+                        Read
+                        <Hyperlink NavigateUri="https://nugetreferenceswitcher.codeplex.com/wikipage?title=Introduction" 
+                                   Click="OnOpenHyperlink"><Run Text="this article"/></Hyperlink>
+                        on how to use the extension.
+                    </TextBlock>
+                    
+                    <TextBlock Text="Components" FontWeight="Bold" Margin="0,8,0,4" />
+                    <TextBlock Margin="0,0,0,4">
+                        - <Hyperlink NavigateUri="http://mytoolkit.codeplex.com" Click="OnOpenHyperlink"><Run 
+                            Text="MyToolkit"/></Hyperlink>: .NET library with MVVM classes, controls and more components.
+                    </TextBlock>
+                </StackPanel>
             </TabItem>
         </TabControl>
     </Grid>

@@ -16,6 +16,7 @@ using System.Windows.Threading;
 using EnvDTE;
 using MyToolkit.Collections;
 using MyToolkit.Mvvm;
+using MyToolkit.Utilities;
 using NuGetReferenceSwitcher.Presentation.Domain;
 using VSLangProj;
 
@@ -26,7 +27,7 @@ namespace NuGetReferenceSwitcher.Presentation.ViewModels
         public MainDialogModel()
         {
             Projects = new ExtendedObservableCollection<ProjectModel>();
-            Switches = new ExtendedObservableCollection<FromNuGetToProjectSwitch>();
+            Transformations = new ExtendedObservableCollection<FromNuGetToProjectTransformation>();
 
             RemoveProjects = true;
             SaveProjects = true;
@@ -36,7 +37,7 @@ namespace NuGetReferenceSwitcher.Presentation.ViewModels
         public ExtendedObservableCollection<ProjectModel> Projects { get; private set; }
 
         /// <summary>Gets the NuGet to project switches which are shown in the first tab. </summary>
-        public ExtendedObservableCollection<FromNuGetToProjectSwitch> Switches { get; private set; }
+        public ExtendedObservableCollection<FromNuGetToProjectTransformation> Transformations { get; private set; }
 
         /// <summary>Gets or sets a value indicating whether the changed projects should be saved. </summary>
         public bool SaveProjects { get; set; }
@@ -70,10 +71,11 @@ namespace NuGetReferenceSwitcher.Presentation.ViewModels
             }, token));
 
             Projects.Initialize(projects);
-            Switches.Initialize(projects
+            Transformations.Initialize(projects
                 .SelectMany(p => p.NuGetReferences)
                 .GroupBy(r => r.Name)
-                .Select(g => new FromNuGetToProjectSwitch(projects, g.First())));
+                .Select(g => new FromNuGetToProjectTransformation(projects, g.First()))
+                .OrderBy(s => s.FromAssemblyName));
         }
 
         /// <summary>Switches the NuGet DLL references to the selected project references. </summary>
@@ -83,19 +85,21 @@ namespace NuGetReferenceSwitcher.Presentation.ViewModels
             await RunTaskAsync(token => Task.Run(() =>
             {
                 // add required projects to solution
-                var order = ProjectDependencyResolver.GetBuildOrder(Switches.Where(p => !p.IsDeactivated).Select(p => p.ProjectPath)).ToList();
-                var switches = Switches.Where(p => !p.IsDeactivated).OrderBy(p => order.IndexOf(p.ProjectPath)).ToList();
+                var activeProjectPaths = Transformations.Where(p => !p.IsDeactivated).Select(p => p.ToProjectPath);
+                var projectBuildOrder = ProjectDependencyResolver.GetBuildOrder(activeProjectPaths).ToList();
+                var activeTransformations = Transformations
+                    .Where(p => !p.IsDeactivated)
+                    .OrderBy(p => projectBuildOrder.IndexOf(p.ToProjectPath))
+                    .ToList();
 
-                foreach (var assemblyToProjectSwitch in switches)
-                {
-                    AddProjectToSolution(assemblyToProjectSwitch);
-                }
+                foreach (var transformation in activeTransformations)
+                    AddProjectToSolutionIfNeeded(transformation);
 
                 // add references
                 foreach (var project in Projects.ToArray())
                 {
-                    var assemblyReferenceSwitchesForProject = "";
-                    foreach (var assemblyToProjectSwitch in Switches.Where(p => !p.IsDeactivated))
+                    var nuGetReferenceTransformationsForProject = "";
+                    foreach (var assemblyToProjectSwitch in Transformations.Where(p => !p.IsDeactivated))
                     {
                         var reference = project.NuGetReferences
                             .FirstOrDefault(r => r.Path == assemblyToProjectSwitch.FromAssemblyPath);
@@ -104,43 +108,28 @@ namespace NuGetReferenceSwitcher.Presentation.ViewModels
                         {
                             reference.Remove();
 
-                            if (assemblyToProjectSwitch.IsProjectPathSelected)
-                            {
-                                project.AddProject(assemblyToProjectSwitch.ToProjectFromPath);
-
-                                assemblyReferenceSwitchesForProject +=
-                                    assemblyToProjectSwitch.ToProjectFromPath.Name + "\t" +
-                                    assemblyToProjectSwitch.ToProjectFromPath.Path + "\t" +
-                                    assemblyToProjectSwitch.FromAssemblyPath + "\n";
-                            }
-                            else
-                            {
-                                project.AddProject(assemblyToProjectSwitch.ToProject);
-                                assemblyReferenceSwitchesForProject +=
-                                    assemblyToProjectSwitch.ToProject.Name + "\t" +
-                                    assemblyToProjectSwitch.ToProject.Path + "\t" +
-                                    assemblyToProjectSwitch.FromAssemblyPath + "\n";
-                            }
+                            project.AddProjectReference(assemblyToProjectSwitch.ToProject);
+                            nuGetReferenceTransformationsForProject +=
+                                assemblyToProjectSwitch.ToProject.Name + "\t" +
+                                assemblyToProjectSwitch.ToProject.Path + "\t" +
+                                assemblyToProjectSwitch.FromAssemblyPath + "\n";
 
                             if (SaveProjects)
                                 project.Save();
                         }
                     }
 
-                    if (!string.IsNullOrEmpty(assemblyReferenceSwitchesForProject))
-                        File.AppendAllText(project.CurrentConfigurationPath, assemblyReferenceSwitchesForProject);
+                    if (!string.IsNullOrEmpty(nuGetReferenceTransformationsForProject))
+                        File.AppendAllText(project.CurrentConfigurationPath, nuGetReferenceTransformationsForProject);
                 }
             }, token));
         }
 
-        private void AddProjectToSolution(FromNuGetToProjectSwitch fromNuGetToProjectSwitch)
+        /// <summary>Handles an exception which occured in the <see cref="M:MyToolkit.Mvvm.ViewModelBase.RunTaskAsync(System.Func{System.Threading.CancellationToken,System.Threading.Tasks.Task})"/> method. </summary>
+        /// <param name="exception">The exception. </param>
+        public override void HandleException(Exception exception)
         {
-            if (fromNuGetToProjectSwitch.IsProjectPathSelected)
-            {
-                var project = Application.Solution.AddFromFile(fromNuGetToProjectSwitch.ProjectPath);
-                var myProject = new ProjectModel((VSProject)project.Object);
-                fromNuGetToProjectSwitch.ToProjectFromPath = myProject;
-            }
+            MessageBox.Show(exception.Message, "An error occurred");
         }
 
         /// <summary>Switches the project references to the previously referenced NuGet DLLs. </summary>
@@ -149,22 +138,18 @@ namespace NuGetReferenceSwitcher.Presentation.ViewModels
         {
             await RunTaskAsync(token => Task.Run(() =>
             {
-                var projectsToDelete = Projects
-                    .SelectMany(p => p.CurrentSwitches.Select(s => s.FromProjectName))
-                    .Select(name => Projects.SingleOrDefault(p => p.Name == name))
-                    .ToList();
-                
+                var projectsToRemove = GetCurrentProjectsToRemove();
                 foreach (var project in Projects)
                 {
-                    foreach (var line in project.CurrentSwitches)
+                    foreach (var transformation in project.CurrentToNuGetTransformations)
                     {
                         var reference = project.References
-                            .FirstOrDefault(r => r.ProjectName == line.FromProjectName);
+                            .FirstOrDefault(r => r.ProjectName == transformation.FromProjectName);
 
                         if (reference != null)
                         {
                             reference.Remove();
-                            project.AddReference(line.ToAssemblyPath);
+                            project.AddReference(transformation.ToAssemblyPath);
 
                             if (SaveProjects)
                                 project.Save();
@@ -174,24 +159,43 @@ namespace NuGetReferenceSwitcher.Presentation.ViewModels
                     project.DeleteConfigurationFile();
                 }
 
-                if (RemoveProjects)
-                {
-                    var order = ProjectDependencyResolver.GetBuildOrder(projectsToDelete.Select(p => p.Path)).ToList();
-                    var projects = projectsToDelete.OrderByDescending(p => order.IndexOf(p.Path)).ToList();
-                    foreach (var project in projects)
-                    {
-                        if (project != null)
-                            project.RemoveFromSolution(Application.Solution);
-                    }
-                }
+                RemoveProjectsFromSolution(projectsToRemove);
             }, token));
         }
 
-        /// <summary>Handles an exception which occured in the <see cref="M:MyToolkit.Mvvm.ViewModelBase.RunTaskAsync(System.Func{System.Threading.CancellationToken,System.Threading.Tasks.Task})"/> method. </summary>
-        /// <param name="exception">The exception. </param>
-        public override void HandleException(Exception exception)
+        private void AddProjectToSolutionIfNeeded(FromNuGetToProjectTransformation fromNuGetToProjectTransformation)
         {
-            MessageBox.Show(exception.Message, "An error occurred"); 
+            if (fromNuGetToProjectTransformation.IsProjectPathSelected && !string.IsNullOrEmpty(fromNuGetToProjectTransformation.ToProjectPath))
+            {
+                var project = Application.Solution.AddFromFile(fromNuGetToProjectTransformation.ToProjectPath);
+                var myProject = new ProjectModel((VSProject)project.Object);
+                fromNuGetToProjectTransformation.ToProject = myProject;
+            }
+        }
+
+        private List<ProjectModel> GetCurrentProjectsToRemove()
+        {
+            return Projects
+                .SelectMany(p => p.CurrentToNuGetTransformations.Select(s => s.FromProjectName))
+                .Select(name => Projects.SingleOrDefault(p => p.Name == name))
+                .ToList();
+        }
+
+        private void RemoveProjectsFromSolution(List<ProjectModel> projectsToDelete)
+        {
+            if (RemoveProjects)
+            {
+                var pathsOfProjectsToRemove = projectsToDelete.Select(p => p.Path);
+                var projectBuildOrder = ProjectDependencyResolver.GetBuildOrder(pathsOfProjectsToRemove).ToList();
+                var orderedProjectsToRemove = projectsToDelete
+                    .OrderByDescending(p => projectBuildOrder.IndexOf(p.Path)).ToList();
+
+                foreach (var project in orderedProjectsToRemove)
+                {
+                    if (project != null)
+                        project.RemoveFromSolution(Application.Solution);
+                }
+            }
         }
     }
 }
