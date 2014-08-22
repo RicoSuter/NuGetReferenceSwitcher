@@ -37,8 +37,7 @@
                             <ItemsControl.ItemTemplate>
                                 <DataTemplate>
                                     <StackPanel Margin="0,0,0,8">
-                                        <TextBlock Text="{Binding FromAssemblyName}" FontWeight="Bold" Margin="0,0,0,4" />
-                                        <TextBlock Text="{Binding FromAssemblyPath}" TextWrapping="Wrap" Margin="0,0,0,4" />
+                                        <TextBlock Text="{Binding FromAssemblyName}" ToolTip="{Binding FromAssemblyPath}" FontWeight="Bold" Margin="0,0,0,4" />
 
                                         <RadioButton IsChecked="{Binding IsDeactivated, Mode=TwoWay}" 
                                                      GroupName="{Binding FromAssemblyName}"
@@ -144,19 +143,21 @@
                 </Grid>
             </TabItem>
             <TabItem Header="About">
-                <StackPanel>
-                    <TextBlock Margin="0,0,0,4" FontSize="16">
+                <StackPanel Margin="8">
+                    <TextBlock Margin="0,0,0,8" FontSize="16">
                         NuGet Reference Switcher has been developed by 
                         <Hyperlink NavigateUri="http://www.rsuter.com" Click="OnOpenHyperlink"><Run Text="Rico Suter"/></Hyperlink>.
                     </TextBlock>
-                    <TextBlock Margin="0,0,0,4">
+                    <TextBlock Margin="0,0,0,8">
+                        Version: <Run Text="{Binding ExtensionVersion, Mode=OneWay}" />
+                    </TextBlock>
+                    <TextBlock Margin="0,0,0,8">
                         Read
                         <Hyperlink NavigateUri="https://nugetreferenceswitcher.codeplex.com/wikipage?title=Introduction" 
                                    Click="OnOpenHyperlink"><Run Text="this article"/></Hyperlink>
                         on how to use the extension.
                     </TextBlock>
-                    
-                    <TextBlock Text="Components" FontWeight="Bold" Margin="0,8,0,4" />
+                    <TextBlock Text="Components" FontWeight="Bold" Margin="0,0,0,4" />
                     <TextBlock Margin="0,0,0,4">
                         - <Hyperlink NavigateUri="http://mytoolkit.codeplex.com" Click="OnOpenHyperlink"><Run 
                             Text="MyToolkit"/></Hyperlink>: .NET library with MVVM classes, controls and more components.

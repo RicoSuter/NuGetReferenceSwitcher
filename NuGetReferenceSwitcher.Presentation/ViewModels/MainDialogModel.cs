@@ -10,6 +10,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Threading;
@@ -24,6 +25,8 @@ namespace NuGetReferenceSwitcher.Presentation.ViewModels
 {
     public class MainDialogModel : ViewModelBase
     {
+        private Assembly _extensionAssembly;
+
         public MainDialogModel()
         {
             Projects = new ExtendedObservableCollection<ProjectModel>();
@@ -50,6 +53,23 @@ namespace NuGetReferenceSwitcher.Presentation.ViewModels
 
         /// <summary>Gets or sets the used UI dispatcher. </summary>
         public Dispatcher Dispatcher { get; set; }
+
+        /// <summary>Gets or sets the assembly of the extension. </summary>
+        public Assembly ExtensionAssembly
+        {
+            get { return _extensionAssembly; }
+            set 
+            { 
+                if (Set(ref _extensionAssembly, value))
+                    RaisePropertyChanged(() => ExtensionVersion);
+            }
+        }
+
+        /// <summary>Gets the current extension version.</summary>
+        public string ExtensionVersion
+        {
+            get { return ExtensionAssembly.GetVersionWithBuildTime(); }
+        }
 
         /// <summary>Initializes the view model. Must only be called once per view model instance 
         /// (after the InitializeComponent method of a <see cref="!:UserControl"/>). </summary>

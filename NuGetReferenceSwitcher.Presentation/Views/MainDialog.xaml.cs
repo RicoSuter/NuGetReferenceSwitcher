@@ -7,6 +7,7 @@
 //-----------------------------------------------------------------------
 
 using System.Linq;
+using System.Reflection;
 using System.Windows;
 using System.Windows.Documents;
 using System.Windows.Forms;
@@ -25,10 +26,11 @@ namespace NuGetReferenceSwitcher.Presentation.Views
     /// <summary>Interaction logic for MainDialog.xaml </summary>
     public partial class MainDialog : Window
     {
-        public MainDialog(DTE application)
+        public MainDialog(DTE application, Assembly extensionAssembly)
         {
             InitializeComponent();
 
+            Model.ExtensionAssembly = extensionAssembly; 
             Model.Application = application;
             Model.Dispatcher = Dispatcher;
 
