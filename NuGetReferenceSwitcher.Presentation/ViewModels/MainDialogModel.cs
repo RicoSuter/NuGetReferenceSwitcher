@@ -15,6 +15,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Threading;
 using EnvDTE;
+using EnvDTE80;
 using MyToolkit.Collections;
 using MyToolkit.Mvvm;
 using MyToolkit.Utilities;
@@ -68,7 +69,7 @@ namespace NuGetReferenceSwitcher.Presentation.ViewModels
         /// <summary>Gets the current extension version.</summary>
         public string ExtensionVersion
         {
-            get { return ExtensionAssembly.GetVersionWithBuildTime(); }
+            get { return ExtensionAssembly != null ? ExtensionAssembly.GetVersionWithBuildTime() : "n/a"; }
         }
 
         /// <summary>Initializes the view model. Must only be called once per view model instance 
@@ -81,12 +82,7 @@ namespace NuGetReferenceSwitcher.Presentation.ViewModels
                 if (Application != null)
                 {
                     if (Application.Solution != null)
-                    {
-                        projects = Application.Solution.Projects.OfType<Project>()
-                            .Where(p => p.Object is VSProject)
-                            .Select(p => (VSProject)p.Object)
-                            .Select(project => new ProjectModel(project)).ToList();
-                    }
+                        projects = GetAllProjects(Application.Solution.Projects.OfType<Project>());
                 }
             }, token));
 
@@ -181,6 +177,29 @@ namespace NuGetReferenceSwitcher.Presentation.ViewModels
 
                 RemoveProjectsFromSolution(projectsToRemove);
             }, token));
+        }
+
+        private List<ProjectModel> GetAllProjects(IEnumerable<Project> objects)
+        {
+            var projects = new List<ProjectModel>();
+
+            foreach (var project in objects)
+            {
+                if (project.Kind == ProjectKinds.vsProjectKindSolutionFolder)
+                {
+                    projects.AddRange(GetAllProjects(project.ProjectItems
+                        .OfType<ProjectItem>()
+                        .Where(i => i.SubProject != null)
+                        .Select(i => i.SubProject)));
+                }
+                else
+                {
+                    if (project.Object is VSProject)
+                        projects.Add(new ProjectModel((VSProject) project.Object));
+                }
+            }
+
+            return projects;
         }
 
         private void AddProjectToSolutionIfNeeded(FromNuGetToProjectTransformation fromNuGetToProjectTransformation)
