@@ -6,7 +6,7 @@
 // <author>Rico Suter, mail@rsuter.com</author>
 //-----------------------------------------------------------------------
 
-namespace NuGetReferenceSwitcher.Presentation.Domain
+namespace NuGetReferenceSwitcher.Presentation.Model
 {
     public class FromProjectToNuGetTransformation
     {

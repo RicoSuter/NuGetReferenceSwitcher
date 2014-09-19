@@ -13,12 +13,14 @@ using EnvDTE;
 using MyToolkit.Collections;
 using VSLangProj;
 
-namespace NuGetReferenceSwitcher.Presentation.Domain
+namespace NuGetReferenceSwitcher.Presentation.Model
 {
     public class ProjectModel
     {
         private readonly VSProject _vsProject;
 
+        /// <summary>Initializes a new instance of the <see cref="ProjectModel"/> class. </summary>
+        /// <param name="project">The native project object. </param>
         public ProjectModel(VSProject project)
         {
             _vsProject = project;

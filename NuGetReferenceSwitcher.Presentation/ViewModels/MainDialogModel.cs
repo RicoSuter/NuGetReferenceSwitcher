@@ -19,7 +19,7 @@ using EnvDTE80;
 using MyToolkit.Collections;
 using MyToolkit.Mvvm;
 using MyToolkit.Utilities;
-using NuGetReferenceSwitcher.Presentation.Domain;
+using NuGetReferenceSwitcher.Presentation.Model;
 using VSLangProj;
 
 namespace NuGetReferenceSwitcher.Presentation.ViewModels

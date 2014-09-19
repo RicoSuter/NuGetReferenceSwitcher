@@ -132,10 +132,10 @@
     </COMReference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Domain\FromNuGetToProjectTransformation.cs" />
-    <Compile Include="Domain\ProjectModel.cs" />
-    <Compile Include="Domain\ReferenceModel.cs" />
-    <Compile Include="Domain\FromProjectToNuGetTransformation.cs" />
+    <Compile Include="Model\FromNuGetToProjectTransformation.cs" />
+    <Compile Include="Model\ProjectModel.cs" />
+    <Compile Include="Model\ReferenceModel.cs" />
+    <Compile Include="Model\FromProjectToNuGetTransformation.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ViewModels\MainDialogModel.cs" />
     <Compile Include="Views\MainDialog.xaml.cs">

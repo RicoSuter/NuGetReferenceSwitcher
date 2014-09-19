@@ -8,12 +8,14 @@
 
 using VSLangProj;
 
-namespace NuGetReferenceSwitcher.Presentation.Domain
+namespace NuGetReferenceSwitcher.Presentation.Model
 {
     public class ReferenceModel
     {
         private readonly Reference _reference;
 
+        /// <summary>Initializes a new instance of the <see cref="ReferenceModel"/> class. </summary>
+        /// <param name="reference">The native reference object. </param>
         public ReferenceModel(Reference reference)
         {
             _reference = reference;

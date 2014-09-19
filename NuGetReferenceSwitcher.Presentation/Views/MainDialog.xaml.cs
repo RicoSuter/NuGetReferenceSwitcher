@@ -15,7 +15,7 @@ using System.Windows.Input;
 using EnvDTE;
 using MyToolkit.Collections;
 using MyToolkit.Mvvm;
-using NuGetReferenceSwitcher.Presentation.Domain;
+using NuGetReferenceSwitcher.Presentation.Model;
 using NuGetReferenceSwitcher.Presentation.ViewModels;
 using Button = System.Windows.Controls.Button;
 using KeyEventArgs = System.Windows.Input.KeyEventArgs;
@@ -26,6 +26,9 @@ namespace NuGetReferenceSwitcher.Presentation.Views
     /// <summary>Interaction logic for MainDialog.xaml </summary>
     public partial class MainDialog : Window
     {
+        /// <summary>Initializes a new instance of the <see cref="MainDialog"/> class. </summary>
+        /// <param name="application">The application object. </param>
+        /// <param name="extensionAssembly">The assembly of the extension. </param>
         public MainDialog(DTE application, Assembly extensionAssembly)
         {
             InitializeComponent();
@@ -40,6 +43,7 @@ namespace NuGetReferenceSwitcher.Presentation.Views
             KeyUp += OnKeyUp;
         }
 
+        /// <summary>Gets the view model. </summary>
         public MainDialogModel Model
         {
             get { return (MainDialogModel)Resources["ViewModel"]; }

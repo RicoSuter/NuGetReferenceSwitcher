@@ -10,7 +10,7 @@ using System.Collections.Generic;
 using System.Linq;
 using MyToolkit.Model;
 
-namespace NuGetReferenceSwitcher.Presentation.Domain
+namespace NuGetReferenceSwitcher.Presentation.Model
 {
     public class FromNuGetToProjectTransformation : ObservableObject
     {
@@ -18,6 +18,9 @@ namespace NuGetReferenceSwitcher.Presentation.Domain
         private bool _isProjectPathSelected;
         private bool _isDeactivated;
 
+        /// <summary>Initializes a new instance of the <see cref="FromNuGetToProjectTransformation"/> class. </summary>
+        /// <param name="projects">The projects. </param>
+        /// <param name="assemblyReference">The assembly reference. </param>
         public FromNuGetToProjectTransformation(List<ProjectModel> projects, ReferenceModel assemblyReference)
         {
             FromAssemblyName = assemblyReference.Name;
