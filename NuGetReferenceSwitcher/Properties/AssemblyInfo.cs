@@ -15,4 +15,4 @@ using System.Runtime.InteropServices;
 [assembly: CLSCompliant(false)]
 [assembly: NeutralResourcesLanguage("en-US")]
 
-[assembly: AssemblyVersion("0.5.*")]
+[assembly: AssemblyVersion("0.6.*")]

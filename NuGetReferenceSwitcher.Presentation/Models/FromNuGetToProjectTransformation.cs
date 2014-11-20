@@ -10,13 +10,18 @@ using System.Collections.Generic;
 using System.Linq;
 using MyToolkit.Model;
 
-namespace NuGetReferenceSwitcher.Presentation.Model
+namespace NuGetReferenceSwitcher.Presentation.Models
 {
+    public enum NuGetToProjectMode
+    {
+        Deactivated,
+        ProjectPath,
+        Project
+    }
+
     public class FromNuGetToProjectTransformation : ObservableObject
     {
         private string _toProjectPath;
-        private bool _isProjectPathSelected;
-        private bool _isDeactivated;
         private ProjectModel _toProject;
 
         /// <summary>Initializes a new instance of the <see cref="FromNuGetToProjectTransformation"/> class. </summary>
@@ -27,23 +32,20 @@ namespace NuGetReferenceSwitcher.Presentation.Model
             FromAssemblyName = assemblyReference.Name;
             FromAssemblyPath = assemblyReference.Path;
 
-            var swi = projects.SelectMany(p => p.PreviousToNuGetTransformations).SingleOrDefault(s => s.ToAssemblyPath == FromAssemblyPath);
+            var swi = projects
+                .SelectMany(p => p.PreviousToNuGetTransformations)
+                .SingleOrDefault(s => s.ToAssemblyPath == FromAssemblyPath);
+
             if (swi != null)
             {
-                var targetProject = projects.FirstOrDefault(p => p.PreviousToNuGetTransformations.Contains(swi));
+                var targetProject = projects.FirstOrDefault(p => p.Path == swi.FromProjectPath);
                 if (targetProject == null)
-                {
                     ToProjectPath = swi.FromProjectPath;
-                    IsProjectPathSelected = true;
-                }
                 else
-                {
-                    ToProject = projects.FirstOrDefault(p => p.PreviousToNuGetTransformations.Contains(swi));
-                    IsProjectPathSelected = false;
-                }
+                    ToProject = targetProject;
             }
             else
-                IsDeactivated = true;
+                SelectedMode = NuGetToProjectMode.Deactivated;
         }
 
         /// <summary>Gets or sets the NuGet assembly name to switch. </summary>
@@ -52,32 +54,29 @@ namespace NuGetReferenceSwitcher.Presentation.Model
         /// <summary>Gets or sets the NuGet assembly path to switch. </summary>
         public string FromAssemblyPath { get; set; }
 
+        private NuGetToProjectMode _selectedMode;
+
         /// <summary>Gets or sets a value indicating whether the switch is deactivated. </summary>
-        public bool IsDeactivated
+        public NuGetToProjectMode SelectedMode
         {
-            get { return _isDeactivated; }
-            set { Set(ref _isDeactivated, value); }
+            get { return _selectedMode; }
+            set { Set(ref _selectedMode, value); }
         }
-        
-        /// <summary>Gets or sets a value indicating whether a project path is selected. </summary>
-        public bool IsProjectPathSelected
-        {
-            get { return _isProjectPathSelected; }
-            set
-            {
-                if (Set(ref _isProjectPathSelected, value))
-                {
-                    if (_isProjectPathSelected)
-                        ToProject = null;
-                }
-            }
-        }
-        
+
         /// <summary>Gets or sets the projectPath. </summary>
         public string ToProjectPath
         {
             get { return _toProjectPath; }
-            set { Set(ref _toProjectPath, value); }
+            set
+            {
+                if (Set(ref _toProjectPath, value))
+                {
+                    if (_toProjectPath == null)
+                        SelectedMode = NuGetToProjectMode.Project;
+                    else
+                        SelectedMode = NuGetToProjectMode.ProjectPath;
+                }
+            }
         }
 
         /// <summary>Gets or sets the target project to switch to. </summary>
@@ -88,13 +87,18 @@ namespace NuGetReferenceSwitcher.Presentation.Model
             {
                 if (Set(ref _toProject, value))
                 {
-                    if (_toProject != null)
-                    {
-                        IsProjectPathSelected = false;
-                        ToProjectPath = _toProject.Path;
-                    }
+                    if (_toProject == null)
+                        SelectedMode = NuGetToProjectMode.ProjectPath;
+                    else
+                        SelectedMode = NuGetToProjectMode.Project;
                 }
             }
+        }
+
+        /// <summary>Gets the evaluated to project path. </summary>
+        public string EvaluatedToProjectPath
+        {
+            get { return SelectedMode == NuGetToProjectMode.ProjectPath ? ToProjectPath : ToProject.Path; }
         }
     }
 }

@@ -15,7 +15,7 @@ using System.Windows.Input;
 using EnvDTE;
 using MyToolkit.Collections;
 using MyToolkit.Mvvm;
-using NuGetReferenceSwitcher.Presentation.Model;
+using NuGetReferenceSwitcher.Presentation.Models;
 using NuGetReferenceSwitcher.Presentation.ViewModels;
 using Button = System.Windows.Controls.Button;
 using KeyEventArgs = System.Windows.Input.KeyEventArgs;

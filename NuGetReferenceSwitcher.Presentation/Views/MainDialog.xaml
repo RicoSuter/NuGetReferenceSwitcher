@@ -3,6 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:converters="clr-namespace:MyToolkit.Converters;assembly=MyToolkit.Extended"
         xmlns:viewModels="clr-namespace:NuGetReferenceSwitcher.Presentation.ViewModels"
+        xmlns:converters1="clr-namespace:NuGetReferenceSwitcher.Presentation.Converters"
         Title="Switch NuGet and Project references" 
         Height="700" Width="800" ResizeMode="CanResizeWithGrip"
         WindowStartupLocation="CenterScreen">
@@ -11,6 +12,8 @@
         <viewModels:MainDialogModel x:Key="ViewModel" />
         <converters:NotConverter x:Key="NotConverter" />
         <converters:VisibilityConverter x:Key="VisibilityConverter" />
+        <converters1:NuGetToProjectModeConverter x:Key="NuGetToProjectModeConverter" />
+        <converters1:NotNuGetToProjectModeConverter x:Key="NotNuGetToProjectModeConverter" />
     </Window.Resources>
 
     <Grid DataContext="{StaticResource ViewModel}">
@@ -39,26 +42,27 @@
                                     <StackPanel Margin="0,0,0,8">
                                         <TextBlock Text="{Binding FromAssemblyName}" ToolTip="{Binding FromAssemblyPath}" FontWeight="Bold" Margin="0,0,0,4" />
 
-                                        <RadioButton IsChecked="{Binding IsDeactivated, Mode=TwoWay}" 
+                                        <RadioButton IsChecked="{Binding SelectedMode, Mode=TwoWay, ConverterParameter='Deactivated', Converter={StaticResource NuGetToProjectModeConverter}}" 
                                                      GroupName="{Binding FromAssemblyName}"
                                                      Content="Do not replace" Margin="0,0,0,4" />
 
-                                        <RadioButton IsChecked="{Binding IsProjectPathSelected, Mode=TwoWay}" 
+                                        <RadioButton IsChecked="{Binding SelectedMode, Mode=TwoWay, ConverterParameter='ProjectPath', Converter={StaticResource NuGetToProjectModeConverter}}" 
                                                      GroupName="{Binding FromAssemblyName}" Margin="0,0,0,4"
                                                      Content="Add new Project to Solution" />
 
-                                        <RadioButton IsChecked="False" Margin="0,0,0,4"
+                                        <RadioButton IsChecked="{Binding SelectedMode, Mode=TwoWay, ConverterParameter='Project', Converter={StaticResource NuGetToProjectModeConverter}}" 
                                                      GroupName="{Binding FromAssemblyName}"
                                                      Content="Use existing Project" />
 
-                                        <StackPanel Visibility="{Binding IsDeactivated, Converter={StaticResource NotConverter}}">
-                                            <StackPanel Visibility="{Binding IsProjectPathSelected, Converter={StaticResource VisibilityConverter}}">
+                                        <StackPanel Visibility="{Binding SelectedMode, Mode=OneWay, ConverterParameter='Deactivated', Converter={StaticResource NotNuGetToProjectModeConverter}}" 
+                                                    Margin="0,4,0,0">
+                                            <StackPanel Visibility="{Binding SelectedMode, Mode=OneWay, ConverterParameter='ProjectPath', Converter={StaticResource NuGetToProjectModeConverter}}">
                                                 <Button Content="Select Project to add" Click="OnSelectProjectFile" Tag="{Binding}" />
                                                 <TextBlock Text="{Binding ToProjectPath}" TextWrapping="Wrap" Margin="0,4,0,0"
                                                            Visibility="{Binding ToProjectPath, Converter={StaticResource VisibilityConverter}}" />
                                             </StackPanel>
 
-                                            <StackPanel Visibility="{Binding IsProjectPathSelected, Converter={StaticResource NotConverter}}">
+                                            <StackPanel Visibility="{Binding SelectedMode, Mode=OneWay, ConverterParameter='Project', Converter={StaticResource NuGetToProjectModeConverter}}">
                                                 <ComboBox ItemsSource="{Binding Projects, Source={StaticResource ViewModel}}"
                                                           SelectedItem="{Binding ToProject, Mode=TwoWay}"
                                                           DisplayMemberPath="Name" />

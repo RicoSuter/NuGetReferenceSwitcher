@@ -20,7 +20,7 @@ using MyToolkit.Build;
 using MyToolkit.Collections;
 using MyToolkit.Mvvm;
 using MyToolkit.Utilities;
-using NuGetReferenceSwitcher.Presentation.Model;
+using NuGetReferenceSwitcher.Presentation.Models;
 using VSLangProj;
 
 namespace NuGetReferenceSwitcher.Presentation.ViewModels
@@ -102,11 +102,14 @@ namespace NuGetReferenceSwitcher.Presentation.ViewModels
             await RunTaskAsync(token => Task.Run(() =>
             {
                 // add required projects to solution
-                var activeProjectPaths = Transformations.Where(p => !p.IsDeactivated).Select(p => p.ToProjectPath);
+                var activeProjectPaths = Transformations
+                    .Where(p => p.SelectedMode != NuGetToProjectMode.Deactivated)
+                    .Select(p => p.EvaluatedToProjectPath);
+
                 var projectBuildOrder = ProjectDependencyResolver.GetBuildOrder(activeProjectPaths).ToList();
                 var activeTransformations = Transformations
-                    .Where(p => !p.IsDeactivated)
-                    .OrderBy(p => projectBuildOrder.IndexOf(p.ToProjectPath))
+                    .Where(p => p.SelectedMode != NuGetToProjectMode.Deactivated)
+                    .OrderBy(p => projectBuildOrder.IndexOf(p.EvaluatedToProjectPath))
                     .ToList();
 
                 foreach (var transformation in activeTransformations)
@@ -116,7 +119,7 @@ namespace NuGetReferenceSwitcher.Presentation.ViewModels
                 foreach (var project in Projects.ToArray())
                 {
                     var nuGetReferenceTransformationsForProject = "";
-                    foreach (var assemblyToProjectSwitch in Transformations.Where(p => !p.IsDeactivated))
+                    foreach (var assemblyToProjectSwitch in Transformations.Where(p => p.SelectedMode != NuGetToProjectMode.Deactivated))
                     {
                         var reference = project.NuGetReferences
                             .FirstOrDefault(r => r.Path == assemblyToProjectSwitch.FromAssemblyPath);
@@ -205,7 +208,8 @@ namespace NuGetReferenceSwitcher.Presentation.ViewModels
 
         private void AddProjectToSolutionIfNeeded(FromNuGetToProjectTransformation fromNuGetToProjectTransformation)
         {
-            if (fromNuGetToProjectTransformation.IsProjectPathSelected && !string.IsNullOrEmpty(fromNuGetToProjectTransformation.ToProjectPath))
+            if (fromNuGetToProjectTransformation.SelectedMode == NuGetToProjectMode.ProjectPath && 
+                !string.IsNullOrEmpty(fromNuGetToProjectTransformation.ToProjectPath))
             {
                 var project = Application.Solution.AddFromFile(fromNuGetToProjectTransformation.ToProjectPath);
                 var myProject = new ProjectModel((VSProject)project.Object);
