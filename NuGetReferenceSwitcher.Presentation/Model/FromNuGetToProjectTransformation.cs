@@ -17,6 +17,7 @@ namespace NuGetReferenceSwitcher.Presentation.Model
         private string _toProjectPath;
         private bool _isProjectPathSelected;
         private bool _isDeactivated;
+        private ProjectModel _toProject;
 
         /// <summary>Initializes a new instance of the <see cref="FromNuGetToProjectTransformation"/> class. </summary>
         /// <param name="projects">The projects. </param>
@@ -37,7 +38,7 @@ namespace NuGetReferenceSwitcher.Presentation.Model
                 }
                 else
                 {
-                    ToProject = projects.First(p => p.PreviousToNuGetTransformations.Contains(swi));
+                    ToProject = projects.FirstOrDefault(p => p.PreviousToNuGetTransformations.Contains(swi));
                     IsProjectPathSelected = false;
                 }
             }
@@ -65,7 +66,10 @@ namespace NuGetReferenceSwitcher.Presentation.Model
             set
             {
                 if (Set(ref _isProjectPathSelected, value))
-                    ToProject = null;
+                {
+                    if (_isProjectPathSelected)
+                        ToProject = null;
+                }
             }
         }
         
@@ -77,6 +81,20 @@ namespace NuGetReferenceSwitcher.Presentation.Model
         }
 
         /// <summary>Gets or sets the target project to switch to. </summary>
-        public ProjectModel ToProject { get; set; }
+        public ProjectModel ToProject
+        {
+            get { return _toProject; }
+            set
+            {
+                if (Set(ref _toProject, value))
+                {
+                    if (_toProject != null)
+                    {
+                        IsProjectPathSelected = false;
+                        ToProjectPath = _toProject.Path;
+                    }
+                }
+            }
+        }
     }
 }
