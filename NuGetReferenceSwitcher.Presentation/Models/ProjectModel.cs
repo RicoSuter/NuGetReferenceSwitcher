@@ -68,7 +68,7 @@ namespace NuGetReferenceSwitcher.Presentation.Models
             get { return _vsProject.Project.FileName; }
         }
 
-        /// <summary>Deletes the preivous configuration file and renames the current 
+        /// <summary>Deletes the previous configuration file and renames the current 
         /// configuration file to the path of the previous configuration file.  </summary>
         public void DeleteConfigurationFile()
         {               

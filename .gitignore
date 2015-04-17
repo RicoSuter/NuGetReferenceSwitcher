@@ -5,3 +5,7 @@
 **.suo
 **.user
 **.DotSettings
+/.vs/NuGetReferenceSwitcher
+/NuGetReferenceSwitcher.sln.ide
+/NuGetReferenceSwitcher.sln.GhostDoc.xml
+/UpgradeLog.htm
