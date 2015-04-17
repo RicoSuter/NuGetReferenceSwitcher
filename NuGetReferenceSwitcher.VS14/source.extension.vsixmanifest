@@ -1,0 +1,21 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<PackageManifest Version="2.0.0" xmlns="http://schemas.microsoft.com/developer/vsx-schema/2011" xmlns:d="http://schemas.microsoft.com/developer/vsx-schema-design/2011">
+    <Metadata>
+        <Identity Id="87a7b0e9-e41c-47c8-953c-b81650401edc" Version="1.2" Language="en-US" Publisher="Rico Suter" />
+        <DisplayName>NuGet Reference Switcher for Visual Studio 2015</DisplayName>
+        <Description xml:space="preserve">Visual Studio extension which automatically switches NuGet assembly references to project references and vice-versa. This is useful when developing applications which reference own NuGet packages: When developing an application, switch to project references so that all code is editable and debuggable. After finishing the development, create new NuGet package versions, switch back to NuGet references and upgrade to the new NuGet versions.</Description>
+        <MoreInfo>https://nugetreferenceswitcher.codeplex.com</MoreInfo>
+        <Tags>Deployment, NuGet, Dependency management</Tags>
+    </Metadata>
+    <Installation InstalledByMsi="false">
+        <InstallationTarget Id="Microsoft.VisualStudio.Pro" Version="[14.0,15.0)" />
+    </Installation>
+    <Dependencies>
+        <Dependency Id="Microsoft.Framework.NDP" DisplayName="Microsoft .NET Framework" d:Source="Manual" Version="[4.5,)" />
+        <Dependency d:Source="Installed" Id="Microsoft.VisualStudio.MPF.14.0" DisplayName="Visual Studio MPF 14.0" Version="[14.0,15.0)" />
+    </Dependencies>
+    <Assets>
+        <Asset Type="Microsoft.VisualStudio.Assembly" d:Source="Project" d:ProjectName="%CurrentProject%" Path="|%CurrentProject%|" AssemblyName="|%CurrentProject%;AssemblyName|" />
+        <Asset Type="Microsoft.VisualStudio.Assembly" d:Source="Project" d:ProjectName="NuGetReferenceSwitcher.Presentation" Path="|NuGetReferenceSwitcher.Presentation|" AssemblyName="|NuGetReferenceSwitcher.Presentation;AssemblyName|" />
+    </Assets>
+</PackageManifest>

@@ -7,6 +7,7 @@
 //-----------------------------------------------------------------------
 
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using MyToolkit.Model;
 
@@ -34,7 +35,7 @@ namespace NuGetReferenceSwitcher.Presentation.Models
 
             var swi = projects
                 .SelectMany(p => p.PreviousToNuGetTransformations)
-                .SingleOrDefault(s => s.ToAssemblyPath == FromAssemblyPath);
+                .FirstOrDefault(s => Path.GetFileNameWithoutExtension(s.ToAssemblyPath) == FromAssemblyName);
 
             if (swi != null)
             {

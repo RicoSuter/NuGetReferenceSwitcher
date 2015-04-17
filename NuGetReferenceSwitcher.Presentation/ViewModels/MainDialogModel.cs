@@ -101,46 +101,49 @@ namespace NuGetReferenceSwitcher.Presentation.ViewModels
         {
             await RunTaskAsync(token => Task.Run(() =>
             {
-                // add required projects to solution
-                var activeProjectPaths = Transformations
-                    .Where(p => p.SelectedMode != NuGetToProjectMode.Deactivated)
-                    .Select(p => p.EvaluatedToProjectPath);
-
-                var projectBuildOrder = ProjectDependencyResolver.GetBuildOrder(activeProjectPaths).ToList();
+                // first, add all required projects
                 var activeTransformations = Transformations
                     .Where(p => p.SelectedMode != NuGetToProjectMode.Deactivated)
-                    .OrderBy(p => projectBuildOrder.IndexOf(p.EvaluatedToProjectPath))
                     .ToList();
 
                 foreach (var transformation in activeTransformations)
+                {
                     AddProjectToSolutionIfNeeded(transformation);
+                }
 
-                // add references
-                foreach (var project in Projects.ToArray())
+                // then, run through all projects and replace nuget dependencies with project references
+                foreach (var project in GetAllProjects(Application.Solution.Projects.OfType<Project>()))
                 {
                     var nuGetReferenceTransformationsForProject = "";
-                    foreach (var assemblyToProjectSwitch in Transformations.Where(p => p.SelectedMode != NuGetToProjectMode.Deactivated))
+                    foreach (var assemblyToProjectSwitch in activeTransformations)
                     {
+                        // take equality not on complete path, but on assembly name
                         var reference = project.NuGetReferences
-                            .FirstOrDefault(r => r.Path == assemblyToProjectSwitch.FromAssemblyPath);
+                            .FirstOrDefault(r => r.Name == assemblyToProjectSwitch.FromAssemblyName);
 
                         if (reference != null)
                         {
+                            var fromAssemblyPath = reference.Path;
+
                             reference.Remove();
 
                             project.AddProjectReference(assemblyToProjectSwitch.ToProject);
                             nuGetReferenceTransformationsForProject +=
                                 assemblyToProjectSwitch.ToProject.Name + "\t" +
                                 assemblyToProjectSwitch.ToProject.Path + "\t" +
-                                assemblyToProjectSwitch.FromAssemblyPath + "\n";
+                                fromAssemblyPath + "\n";
 
                             if (SaveProjects)
+                            {
                                 project.Save();
+                            }
                         }
                     }
 
                     if (!string.IsNullOrEmpty(nuGetReferenceTransformationsForProject))
+                    {
                         File.AppendAllText(project.CurrentConfigurationPath, nuGetReferenceTransformationsForProject);
+                    }
                 }
             }, token));
         }
