@@ -7,13 +7,13 @@
 //-----------------------------------------------------------------------
 
 using System;
-using System.ComponentModel.Design;
 using System.Runtime.InteropServices;
+using System.ComponentModel.Design;
 using System.Windows;
 using System.Windows.Interop;
 using EnvDTE;
-using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
+using Microsoft.VisualStudio.Shell;
 using NuGetReferenceSwitcher.Presentation.Views;
 
 namespace RicoSuter.NuGetReferenceSwitcher
@@ -47,7 +47,7 @@ namespace RicoSuter.NuGetReferenceSwitcher
                 if (application.Solution.IsDirty) // solution must be saved otherwise adding/removing projects will raise errors
                 {
                     MessageBox.Show("Please save your solution first. \n" +
-                                    "Select the solution in the Solution Explorer and press Ctrl-S. ", 
+                                    "Select the solution in the Solution Explorer and press Ctrl-S. ",
                                     "Solution not saved");
                 }
                 else
