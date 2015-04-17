@@ -1,6 +1,5 @@
 ﻿// Guids.cs
 // MUST match guids.h
-
 using System;
 
 namespace RicoSuter.NuGetReferenceSwitcher

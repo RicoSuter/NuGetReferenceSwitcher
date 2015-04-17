@@ -7,13 +7,13 @@
 //-----------------------------------------------------------------------
 
 using System;
-using System.ComponentModel.Design;
 using System.Runtime.InteropServices;
+using System.ComponentModel.Design;
 using System.Windows;
 using System.Windows.Interop;
 using EnvDTE;
-using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
+using Microsoft.VisualStudio.Shell;
 using NuGetReferenceSwitcher.Presentation.Views;
 
 namespace RicoSuter.NuGetReferenceSwitcher

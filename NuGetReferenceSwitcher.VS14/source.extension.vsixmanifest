@@ -15,7 +15,9 @@
         <Dependency d:Source="Installed" Id="Microsoft.VisualStudio.MPF.14.0" DisplayName="Visual Studio MPF 14.0" Version="[14.0,15.0)" />
     </Dependencies>
     <Assets>
-        <Asset Type="Microsoft.VisualStudio.Assembly" d:Source="Project" d:ProjectName="%CurrentProject%" Path="|%CurrentProject%|" AssemblyName="|%CurrentProject%;AssemblyName|" />
+        <Asset Type="Microsoft.VisualStudio.VsPackage" d:Source="Project" d:ProjectName="%CurrentProject%" Path="|%CurrentProject%;PkgdefProjectOutputGroup|" />
         <Asset Type="Microsoft.VisualStudio.Assembly" d:Source="Project" d:ProjectName="NuGetReferenceSwitcher.Presentation" Path="|NuGetReferenceSwitcher.Presentation|" AssemblyName="|NuGetReferenceSwitcher.Presentation;AssemblyName|" />
+        <Asset Type="Microsoft.VisualStudio.Assembly" d:Source="File" Path="MyToolkit.dll" AssemblyName="MyToolkit, Version=2.3.12.0, Culture=neutral, PublicKeyToken=3e349a1360994d26" />
+        <Asset Type="Microsoft.VisualStudio.Assembly" d:Source="File" Path="MyToolkit.Extended.dll" AssemblyName="MyToolkit.Extended, Version=2.3.12.0, Culture=neutral, PublicKeyToken=3e349a1360994d26" />
     </Assets>
 </PackageManifest>

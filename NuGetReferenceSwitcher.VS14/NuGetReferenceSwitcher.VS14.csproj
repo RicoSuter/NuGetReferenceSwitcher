@@ -177,7 +177,8 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="MyToolkit.dll">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <IncludeInVSIX>true</IncludeInVSIX>
     </Content>
     <Content Include="MyToolkit.Extended.dll">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
