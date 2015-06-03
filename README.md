@@ -14,7 +14,7 @@ Features:
 
 ## [Guide about how to use the extension](TODO)
 
-*This is a fully working beta version, please provide feedback to improve the extension.*
+**This is a fully working beta version, please provide feedback to improve the extension.**
 
 ![](http://rsuter.com/Upload/NuGetReferenceSwitcher/02.png)
 
