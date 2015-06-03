@@ -1,3 +1,5 @@
+# NuGet Reference Switcher
+
 NuGet Reference Switcher is a Visual Studio extension which automatically switches NuGet assembly references to project references and vice-versa. This is useful when developing applications which reference own NuGet packages: When developing an application, switch to project references so that all code is editable and debuggable. After finishing the development, create new NuGet package versions, switch back to NuGet references and upgrade to the new NuGet versions. 
 
 Features: 
