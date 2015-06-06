@@ -8,8 +8,6 @@ Features:
 - Automatically adds and removes projects to the solution if desired
 - Checks project dependencies so that the projects get added and removed in the correct order
 
-(This project has originally been hosted on [CodePlex](http://nugetreferenceswitcher.codeplex.com))
-
 [Guide about how to use the extension](https://github.com/rsuter/NuGetReferenceSwitcher/wiki/Guide)
 
 ![](http://rsuter.com/Upload/NuGetReferenceSwitcher/02.png)
@@ -22,3 +20,4 @@ Features:
 
 The NuGet Reference Switcher extension is developed by [Rico Suter](http://rsuter.com) using the [MyToolkit](https://github.com/MyToolkit/Core) library. 
 
+(This project has originally been hosted on [CodePlex](http://nugetreferenceswitcher.codeplex.com))
