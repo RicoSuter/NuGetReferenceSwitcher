@@ -8,6 +8,8 @@ Features:
 - Automatically adds and removes projects to the solution if desired
 - Checks project dependencies so that the projects get added and removed in the correct order
 
+(This project has originally been hosted on [CodePlex](http://nugetreferenceswitcher.codeplex.com))
+
 ## Download from Visual Studio Gallery
 
 * [Download for Visual Studio 2012](https://visualstudiogallery.msdn.microsoft.com/9a7bbfb3-1b44-4a59-8204-0a01abbeeaca)
