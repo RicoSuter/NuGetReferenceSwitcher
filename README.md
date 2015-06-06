@@ -20,5 +20,5 @@ Features:
 
 ![](http://rsuter.com/Upload/NuGetReferenceSwitcher/02.png)
 
-The NuGet Reference Switcher extension is developed by [Rico Suter](http://rsuter.com) using the [MyToolkit](http://https://github.com/MyToolkit/Core) library. 
+The NuGet Reference Switcher extension is developed by [Rico Suter](http://rsuter.com) using the [MyToolkit](https://github.com/MyToolkit/Core) library. 
 
