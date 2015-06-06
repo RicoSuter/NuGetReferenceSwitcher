@@ -188,10 +188,8 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\NuGetReferenceSwitcher.Presentation\NuGetReferenceSwitcher.Presentation.csproj">
-      <Project>{72D2BBE2-B1F7-4782-B7BD-CA377F895746}</Project>
+      <Project>{72d2bbe2-b1f7-4782-b7bd-ca377f895746}</Project>
       <Name>NuGetReferenceSwitcher.Presentation</Name>
-      <IncludeOutputGroupsInVSIX>BuiltProjectOutputGroup%3bBuiltProjectOutputGroupDependencies%3bGetCopyToOutputDirectoryItems%3bSatelliteDllsProjectOutputGroup%3b</IncludeOutputGroupsInVSIX>
-      <IncludeOutputGroupsInVSIXLocalOnly>DebugSymbolsProjectOutputGroup%3b</IncludeOutputGroupsInVSIXLocalOnly>
     </ProjectReference>
   </ItemGroup>
   <PropertyGroup>

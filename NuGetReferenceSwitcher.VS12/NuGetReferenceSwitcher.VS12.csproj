@@ -166,7 +166,7 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       <IncludeInVSIX>true</IncludeInVSIX>
     </Content>
-    <None Include="Resources\Images.png" />
+    <Resource Include="Resources\Images.png" />
     <Content Include="Resources\Package.ico" />
   </ItemGroup>
   <ItemGroup>

@@ -10,9 +10,9 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyProduct("NuGetReferenceSwitcher")]
 [assembly: AssemblyCopyright("")]
 [assembly: AssemblyTrademark("")]
-[assembly: AssemblyCulture("")]
-[assembly: ComVisible(false)]
+[assembly: AssemblyCulture("")]   
+[assembly: ComVisible(false)]     
 [assembly: CLSCompliant(false)]
 [assembly: NeutralResourcesLanguage("en-US")]
 
-[assembly: AssemblyVersion("1.2.*")]
+[assembly: AssemblyVersion("1.1.*")]
