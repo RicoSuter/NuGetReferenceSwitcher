@@ -18,6 +18,6 @@ Features:
 * [Download for Visual Studio 2013](https://visualstudiogallery.msdn.microsoft.com/68878c27-110c-43ec-ae61-3ea3f7aae88c)
 * [Download for Visual Studio 2015](https://visualstudiogallery.msdn.microsoft.com/e2458c0b-03c0-47a9-a94b-0d28567e0a84)
 
-The NuGet Reference Switcher extension is developed by [Rico Suter](http://rsuter.com) using the [MyToolkit](https://github.com/MyToolkit/Core) library. 
+The NuGet Reference Switcher extension is developed by [Rico Suter](http://rsuter.com) using the [MyToolkit](http://mytoolkit.io) library. 
 
 (This project has originally been hosted on [CodePlex](http://nugetreferenceswitcher.codeplex.com))
