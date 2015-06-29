@@ -28,15 +28,15 @@ Right click on the extension project and select `Properties`. In the `Debug` tab
 
 Visual Studio 2012: 
 
-- C:\Program Files (x86)\Microsoft Visual Studio 11.0\Common7\IDE\devenv.exe
+    C:\Program Files (x86)\Microsoft Visual Studio 11.0\Common7\IDE\devenv.exe
 
 Visual Studio 2013: 
 
-- C:\Program Files (x86)\Microsoft Visual Studio 12.0\Common7\IDE\devenv.exe
+    C:\Program Files (x86)\Microsoft Visual Studio 12.0\Common7\IDE\devenv.exe
 
 Visual Studio 2015: 
 
-- C:\Program Files (x86)\Microsoft Visual Studio 14.0\Common7\IDE\devenv.exe
+    C:\Program Files (x86)\Microsoft Visual Studio 14.0\Common7\IDE\devenv.exe
 
 And set the `Command line arguments` to:
 
