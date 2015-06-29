@@ -21,3 +21,23 @@ Features:
 The NuGet Reference Switcher extension is developed by [Rico Suter](http://rsuter.com) using the [MyToolkit](http://mytoolkit.io) library. 
 
 (This project has originally been hosted on [CodePlex](http://nugetreferenceswitcher.codeplex.com))
+
+## How to debug the extension
+
+Right click on the extension project and select `Properties`. In the `Debug` tab set `Start External Program` to one of the following Visual Studio executables: 
+
+Visual Studio 2012: 
+
+    C:\Program Files (x86)\Microsoft Visual Studio 11.0\Common7\IDE\devenv.exe
+
+Visual Studio 2013: 
+
+    C:\Program Files (x86)\Microsoft Visual Studio 12.0\Common7\IDE\devenv.exe
+
+Visual Studio 2015: 
+
+    C:\Program Files (x86)\Microsoft Visual Studio 14.0\Common7\IDE\devenv.exe
+
+And set the `Command line arguments` to:
+
+    /rootsuffix Exp
