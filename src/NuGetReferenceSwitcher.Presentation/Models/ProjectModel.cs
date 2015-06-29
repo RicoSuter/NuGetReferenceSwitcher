@@ -94,11 +94,17 @@ namespace NuGetReferenceSwitcher.Presentation.Models
             _vsProject.Project.Save();
         }
 
-        /// <summary>Adds an assembly reference to the project. </summary>
-        /// <param name="assemblyPath">The assembly path. </param>
-        public void AddReference(string assemblyPath)
+        /// <summary>Adds an assembly reference to the project.</summary>
+        /// <param name="assemblyPath">The assembly path.</param>
+        /// <returns><c>true</c> when the file could be added.</returns>
+        public bool AddReference(string assemblyPath)
         {
-            _vsProject.References.Add(assemblyPath);
+            if (File.Exists(assemblyPath))
+            {
+                _vsProject.References.Add(assemblyPath);
+                return true;
+            }
+            return false; 
         }
 
         /// <summary>Removes the project from the solution. </summary>

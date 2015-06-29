@@ -172,7 +172,13 @@ namespace NuGetReferenceSwitcher.Presentation.ViewModels
                         if (reference != null)
                         {
                             reference.Remove();
-                            project.AddReference(transformation.ToAssemblyPath);
+
+                            var successfullyAdded = project.AddReference(transformation.ToAssemblyPath);
+                            if (!successfullyAdded)
+                            {
+                                MessageBox.Show("The project '" + transformation.ToAssemblyPath + "' could not be added. " +
+                                                "\nSkipped.", "Could not add project");                                
+                            }
 
                             if (SaveProjects)
                                 project.Save();
