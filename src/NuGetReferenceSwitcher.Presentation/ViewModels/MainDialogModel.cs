@@ -130,8 +130,8 @@ namespace NuGetReferenceSwitcher.Presentation.ViewModels
                             project.AddProjectReference(assemblyToProjectSwitch.ToProject);
                             nuGetReferenceTransformationsForProject +=
                                 assemblyToProjectSwitch.ToProject.Name + "\t" +
-                                assemblyToProjectSwitch.ToProject.Path + "\t" +
-                                fromAssemblyPath + "\n";
+                                PathUtilities.MakeRelative(assemblyToProjectSwitch.ToProject.Path, project.CurrentConfigurationPath) + "\t" +
+                                PathUtilities.MakeRelative(fromAssemblyPath, project.CurrentConfigurationPath) + "\n";
 
                             if (SaveProjects)
                             {

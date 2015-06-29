@@ -132,8 +132,14 @@ namespace NuGetReferenceSwitcher.Presentation.Models
                     .Select(l => l.Split('\t'))
                     .Where(l => l.Length == 3).ToArray();
 
+                
+
                 foreach (var line in lines)
-                    list.Add(new FromProjectToNuGetTransformation { FromProjectName = line[0], FromProjectPath = line[1], ToAssemblyPath = line[2] });
+                    list.Add(new FromProjectToNuGetTransformation {
+                        FromProjectName = line[0],
+                        FromProjectPath = PathUtilities.MakeAbsolute(line[1], configurationPath),
+                        ToAssemblyPath = PathUtilities.MakeAbsolute(line[2], configurationPath)
+                    });
             }
             return list;
         }

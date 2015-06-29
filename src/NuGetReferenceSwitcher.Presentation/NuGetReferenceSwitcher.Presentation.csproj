@@ -133,6 +133,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Converters\NuGetToProjectModeConverter.cs" />
+    <Compile Include="PathUtilities.cs" />
     <Compile Include="Models\FromNuGetToProjectTransformation.cs" />
     <Compile Include="Models\ProjectModel.cs" />
     <Compile Include="Models\ReferenceModel.cs" />
