@@ -241,7 +241,7 @@ namespace NuGetReferenceSwitcher.Presentation.ViewModels
                 var pathsOfProjectsToRemove = projectsToDelete.Select(p => p.Path);
                 var projectBuildOrder = ProjectDependencyResolver.GetBuildOrder(pathsOfProjectsToRemove).ToList();
                 var orderedProjectsToRemove = projectsToDelete
-                    .OrderByDescending(p => projectBuildOrder.IndexOf(p.Path)).ToList();
+                    .OrderByDescending(p => projectBuildOrder.IndexOf(p.Path)).Distinct().ToList();
 
                 foreach (var project in orderedProjectsToRemove)
                 {
