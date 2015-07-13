@@ -22,6 +22,24 @@ The NuGet Reference Switcher extension is developed by [Rico Suter](http://rsute
 
 (This project has originally been hosted on [CodePlex](http://nugetreferenceswitcher.codeplex.com))
 
+## How to build the extension
+
+In order to build the extension, you need to install the Visual Studio SDK(s): 
+
+Visual Studio 2012 SDK: 
+	
+http://www.microsoft.com/en-us/download/details.aspx?id=30668
+
+Visual Studio 2013 SDK: 
+
+http://www.microsoft.com/en-us/download/details.aspx?id=40758
+	
+Visual Studio 2015 RC SDK: 
+
+http://www.microsoft.com/en-us/download/details.aspx?id=46850
+
+After installing the SDK, run one of the batch files from the `/build` directory in the corresponding Visual Studio Command Prompt. The release output can be found in the `/build/Output` directory. 
+
 ## How to debug the extension
 
 Right click on the extension project and select `Properties`. In the `Debug` tab set `Start External Program` to one of the following Visual Studio executables: 
@@ -41,3 +59,4 @@ Visual Studio 2015:
 And set the `Command line arguments` to:
 
     /rootsuffix Exp
+

@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
 VisualStudioVersion = 14.0.22310.1
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NuGetReferenceSwitcher.VS14", "NuGetReferenceSwitcher.VS14\NuGetReferenceSwitcher.VS14.csproj", "{BF9A4C82-BEB4-4BCE-8CDF-5AA6D4A16E46}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NuGetReferenceSwitcher.VS15", "NuGetReferenceSwitcher.VS15\NuGetReferenceSwitcher.VS15.csproj", "{BF9A4C82-BEB4-4BCE-8CDF-5AA6D4A16E46}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NuGetReferenceSwitcher.Presentation", "NuGetReferenceSwitcher.Presentation\NuGetReferenceSwitcher.Presentation.csproj", "{72D2BBE2-B1F7-4782-B7BD-CA377F895746}"
 EndProject
