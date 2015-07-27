@@ -60,8 +60,8 @@ namespace NuGetReferenceSwitcher.Presentation.ViewModels
         public Assembly ExtensionAssembly
         {
             get { return _extensionAssembly; }
-            set 
-            { 
+            set
+            {
                 if (Set(ref _extensionAssembly, value))
                     RaisePropertyChanged(() => ExtensionVersion);
             }
@@ -123,19 +123,29 @@ namespace NuGetReferenceSwitcher.Presentation.ViewModels
 
                         if (reference != null)
                         {
-                            var fromAssemblyPath = reference.Path;
-
-                            reference.Remove();
-
-                            project.AddProjectReference(assemblyToProjectSwitch.ToProject);
-                            nuGetReferenceTransformationsForProject +=
-                                assemblyToProjectSwitch.ToProject.Name + "\t" +
-                                PathUtilities.MakeRelative(assemblyToProjectSwitch.ToProject.Path, project.CurrentConfigurationPath) + "\t" +
-                                PathUtilities.MakeRelative(fromAssemblyPath, project.CurrentConfigurationPath) + "\n";
-
-                            if (SaveProjects)
+                            if (assemblyToProjectSwitch.ToProject != null)
                             {
-                                project.Save();
+                                var fromAssemblyPath = reference.Path;
+                                reference.Remove();
+
+                                project.AddProjectReference(assemblyToProjectSwitch.ToProject);
+                                nuGetReferenceTransformationsForProject +=
+                                    assemblyToProjectSwitch.ToProject.Name + "\t" +
+                                    PathUtilities.MakeRelative(assemblyToProjectSwitch.ToProject.Path,
+                                        project.CurrentConfigurationPath) + "\t" +
+                                    PathUtilities.MakeRelative(fromAssemblyPath, project.CurrentConfigurationPath) +
+                                    "\n";
+
+                                if (SaveProjects)
+                                {
+                                    project.Save();
+                                }
+                            }
+                            else
+                            {
+                                MessageBox.Show(
+                                    "Cannot switch from assembly '" + assemblyToProjectSwitch.FromAssemblyName + "' to project '" + assemblyToProjectSwitch.ToProjectPath +
+                                    "' because project is not loaded. ", "Project not loaded");
                             }
                         }
                     }
@@ -177,7 +187,7 @@ namespace NuGetReferenceSwitcher.Presentation.ViewModels
                             if (!successfullyAdded)
                             {
                                 MessageBox.Show("The project '" + transformation.ToAssemblyPath + "' could not be added. " +
-                                                "\nSkipped.", "Could not add project");                                
+                                                "\nSkipped.", "Could not add project");
                             }
 
                             if (SaveProjects)
@@ -208,7 +218,7 @@ namespace NuGetReferenceSwitcher.Presentation.ViewModels
                 else
                 {
                     if (project.Object is VSProject)
-                        projects.Add(new ProjectModel((VSProject) project.Object));
+                        projects.Add(new ProjectModel((VSProject)project.Object));
                 }
             }
 
@@ -217,12 +227,16 @@ namespace NuGetReferenceSwitcher.Presentation.ViewModels
 
         private void AddProjectToSolutionIfNeeded(FromNuGetToProjectTransformation fromNuGetToProjectTransformation)
         {
-            if (fromNuGetToProjectTransformation.SelectedMode == NuGetToProjectMode.ProjectPath && 
-                !string.IsNullOrEmpty(fromNuGetToProjectTransformation.ToProjectPath))
+            if (fromNuGetToProjectTransformation.SelectedMode == NuGetToProjectMode.ProjectPath)
             {
-                var project = Application.Solution.AddFromFile(fromNuGetToProjectTransformation.ToProjectPath);
-                var myProject = new ProjectModel((VSProject)project.Object);
-                fromNuGetToProjectTransformation.ToProject = myProject;
+                if (!string.IsNullOrEmpty(fromNuGetToProjectTransformation.ToProjectPath) && File.Exists(fromNuGetToProjectTransformation.ToProjectPath))
+                {
+                    var project = Application.Solution.AddFromFile(fromNuGetToProjectTransformation.ToProjectPath);
+                    var myProject = new ProjectModel((VSProject)project.Object);
+                    fromNuGetToProjectTransformation.ToProject = myProject;
+                }
+                else
+                    MessageBox.Show("The project '" + fromNuGetToProjectTransformation.ToProjectPath + "' could not be found. (ignored)", "Project not found");
             }
         }
 
