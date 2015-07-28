@@ -26,6 +26,8 @@ namespace NuGetReferenceSwitcher.Presentation.Views
     /// <summary>Interaction logic for MainDialog.xaml </summary>
     public partial class MainDialog : Window
     {
+        private OpenFileDialog _dlg;
+        
         /// <summary>Initializes a new instance of the <see cref="MainDialog"/> class. </summary>
         /// <param name="application">The application object. </param>
         /// <param name="extensionAssembly">The assembly of the extension. </param>
@@ -82,10 +84,16 @@ namespace NuGetReferenceSwitcher.Presentation.Views
         private void OnSelectProjectFile(object sender, RoutedEventArgs e)
         {
             var fntpSwitch = (FromNuGetToProjectTransformation)((Button)sender).Tag;
-            var dlg = new OpenFileDialog();
-            dlg.Filter = "Project Files (*.csproj)|*.csproj";
-            if (dlg.ShowDialog() == System.Windows.Forms.DialogResult.OK)
-                fntpSwitch.ToProjectPath = dlg.FileName;
+            if (_dlg == null)
+            {
+                _dlg = new OpenFileDialog();
+                _dlg.Filter = "CSharp Projects (*.csproj)|*.csproj|VB.NET Projects (*.vbproj)|*.vbproj";
+            }
+
+            _dlg.Title = string.Format("Select Project for '{0}'", fntpSwitch.FromAssemblyName);
+
+            if (_dlg.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+                fntpSwitch.ToProjectPath = _dlg.FileName;
         }
     }
 }
