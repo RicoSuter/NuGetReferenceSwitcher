@@ -88,6 +88,10 @@ namespace NuGetReferenceSwitcher.Presentation.Views
             {
                 _dlg = new OpenFileDialog();
                 _dlg.Filter = "CSharp Projects (*.csproj)|*.csproj|VB.NET Projects (*.vbproj)|*.vbproj";
+
+                // switch to VB if any VB project is already referenced
+                if (Model.Transformations.Any(t => t.ToProjectPath != null && t.ToProjectPath.EndsWith(".vbproj", System.StringComparison.OrdinalIgnoreCase)))
+                    _dlg.FilterIndex = 2;
             }
 
             _dlg.Title = string.Format("Select Project for '{0}'", fntpSwitch.FromAssemblyName);

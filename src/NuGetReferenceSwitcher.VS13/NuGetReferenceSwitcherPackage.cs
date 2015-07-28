@@ -41,14 +41,14 @@ namespace RicoSuter.NuGetReferenceSwitcher
         {
             var application = (DTE)GetService(typeof(SDTE));
             if (application.Solution == null || !application.Solution.IsOpen)
-                MessageBox.Show("Please open a solution first. ", "No solution");
+                MessageBox.Show("Please open a solution first. ", "No solution", MessageBoxButton.OK, MessageBoxImage.Information);
             else
             {
                 if (application.Solution.IsDirty) // solution must be saved otherwise adding/removing projects will raise errors
                 {
                     MessageBox.Show("Please save your solution first. \n" +
                                     "Select the solution in the Solution Explorer and press Ctrl-S. ", 
-                                    "Solution not saved");
+                                    "Solution not saved", MessageBoxButton.OK, MessageBoxImage.Stop);
                 }
                 else
                 {
