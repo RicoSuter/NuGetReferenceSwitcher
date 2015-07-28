@@ -134,20 +134,20 @@ namespace NuGetReferenceSwitcher.Presentation.ViewModels
                                     PathUtilities.MakeRelative(assemblyToProjectSwitch.ToProject.Path,
                                         project.CurrentConfigurationPath) + "\t" +
                                     PathUtilities.MakeRelative(fromAssemblyPath, project.CurrentConfigurationPath) +
-                                    "\n";
-
-                                if (SaveProjects)
-                                {
-                                    project.Save();
-                                }
+                                    "\n";                                
                             }
                             else
                             {
                                 MessageBox.Show(
                                     "Cannot switch from assembly '" + assemblyToProjectSwitch.FromAssemblyName + "' to project '" + assemblyToProjectSwitch.ToProjectPath +
-                                    "' because project is not loaded. ", "Project not loaded");
+                                    "' because project is not loaded. ", "Project not loaded", MessageBoxButton.OK, MessageBoxImage.Error);
                             }
                         }
+                    }
+
+                    if (SaveProjects)
+                    {
+                        project.Save();
                     }
 
                     if (!string.IsNullOrEmpty(nuGetReferenceTransformationsForProject))
@@ -162,7 +162,7 @@ namespace NuGetReferenceSwitcher.Presentation.ViewModels
         /// <param name="exception">The exception. </param>
         public override void HandleException(Exception exception)
         {
-            MessageBox.Show(exception.Message, "An error occurred");
+            MessageBox.Show(exception.Message, "An error occurred", MessageBoxButton.OK, MessageBoxImage.Error);
         }
 
         /// <summary>Switches the project references to the previously referenced NuGet DLLs. </summary>
@@ -187,13 +187,13 @@ namespace NuGetReferenceSwitcher.Presentation.ViewModels
                             if (!successfullyAdded)
                             {
                                 MessageBox.Show("The project '" + transformation.ToAssemblyPath + "' could not be added. " +
-                                                "\nSkipped.", "Could not add project");
-                            }
-
-                            if (SaveProjects)
-                                project.Save();
+                                                "\nSkipped.", "Could not add project", MessageBoxButton.OK, MessageBoxImage.Error);
+                            }                           
                         }
                     }
+
+                    if (SaveProjects)
+                        project.Save();
 
                     project.DeleteConfigurationFile();
                 }
@@ -236,7 +236,7 @@ namespace NuGetReferenceSwitcher.Presentation.ViewModels
                     fromNuGetToProjectTransformation.ToProject = myProject;
                 }
                 else
-                    MessageBox.Show("The project '" + fromNuGetToProjectTransformation.ToProjectPath + "' could not be found. (ignored)", "Project not found");
+                    MessageBox.Show("The project '" + fromNuGetToProjectTransformation.ToProjectPath + "' could not be found. (ignored)", "Project not found", MessageBoxButton.OK, MessageBoxImage.Stop);
             }
         }
 
