@@ -145,11 +145,6 @@ namespace NuGetReferenceSwitcher.Presentation.ViewModels
                         }
                     }
 
-                    if (SaveProjects)
-                    {
-                        project.Save();
-                    }
-
                     if (!string.IsNullOrEmpty(nuGetReferenceTransformationsForProject))
                     {
                         File.AppendAllText(project.CurrentConfigurationPath, nuGetReferenceTransformationsForProject);
@@ -191,9 +186,6 @@ namespace NuGetReferenceSwitcher.Presentation.ViewModels
                             }                           
                         }
                     }
-
-                    if (SaveProjects)
-                        project.Save();
 
                     project.DeleteConfigurationFile();
                 }
