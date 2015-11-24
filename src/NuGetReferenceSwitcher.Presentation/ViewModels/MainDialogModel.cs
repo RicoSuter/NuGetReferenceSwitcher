@@ -145,10 +145,9 @@ namespace NuGetReferenceSwitcher.Presentation.ViewModels
                         }
                     }
 
-                    if (SaveProjects)
-                    {
-                        project.Save();
-                    }
+                    // TODO: Save project
+                    //if (SaveProjects)
+                    //    project.Save();
 
                     if (!string.IsNullOrEmpty(nuGetReferenceTransformationsForProject))
                     {
@@ -192,8 +191,9 @@ namespace NuGetReferenceSwitcher.Presentation.ViewModels
                         }
                     }
 
-                    if (SaveProjects)
-                        project.Save();
+                    // TODO: Save project
+                    //if (SaveProjects)
+                    //    project.Save();
 
                     project.DeleteConfigurationFile();
                 }

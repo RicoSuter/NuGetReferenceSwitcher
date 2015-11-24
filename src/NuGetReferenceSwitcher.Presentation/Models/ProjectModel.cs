@@ -9,6 +9,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Windows.Threading;
 using EnvDTE;
 using MyToolkit.Collections;
 using VSLangProj;
@@ -91,7 +92,11 @@ namespace NuGetReferenceSwitcher.Presentation.Models
         /// <summary>Saves the project. </summary>
         public void Save()
         {
-            _vsProject.Project.Save();
+            // TODO: This may lock up the UI => check and fix
+            Dispatcher.CurrentDispatcher.InvokeAsync(() =>
+            {
+                _vsProject.Project.Save();
+            });
         }
 
         /// <summary>Adds an assembly reference to the project.</summary>

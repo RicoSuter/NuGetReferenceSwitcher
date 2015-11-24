@@ -9,12 +9,14 @@
 using System;
 using System.Runtime.InteropServices;
 using System.ComponentModel.Design;
+using System.Linq;
 using System.Windows;
 using System.Windows.Interop;
 using EnvDTE;
 using Microsoft.VisualStudio.Shell.Interop;
 using Microsoft.VisualStudio.Shell;
 using NuGetReferenceSwitcher.Presentation.Views;
+using VSLangProj;
 
 namespace RicoSuter.NuGetReferenceSwitcher
 {
@@ -49,6 +51,12 @@ namespace RicoSuter.NuGetReferenceSwitcher
                     MessageBox.Show("Please save your solution first. \n" +
                                     "Select the solution in the Solution Explorer and press Ctrl-S. ",
                                     "Solution not saved");
+                }
+                else if (application.Solution.Projects.OfType<Project>().Any(p => p.IsDirty))
+                {
+                    MessageBox.Show("Please save your projects first. \n" +
+                                    "Select the project in the Solution Explorer and press Ctrl-S. ",
+                                    "Project not saved");
                 }
                 else
                 {
