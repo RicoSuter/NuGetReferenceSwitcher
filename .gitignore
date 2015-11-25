@@ -6,10 +6,7 @@
 **.user
 **.DotSettings
 
-/build
-/build/VS12
-/build/VS13
-/build/VS14
+/build/Output
 
 /src/.vs/NuGetReferenceSwitcher
 /src/NuGetReferenceSwitcher.sln.ide
