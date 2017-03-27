@@ -75,7 +75,7 @@ namespace NuGetReferenceSwitcher.Presentation.ViewModels
 
         /// <summary>Initializes the view model. Must only be called once per view model instance 
         /// (after the InitializeComponent method of a <see cref="!:UserControl"/>). </summary>
-        public async override void Initialize()
+        public override async void Initialize()
         {
             List<ProjectModel> projects = null;
             await RunTaskAsync(token => Task.Run(() =>
