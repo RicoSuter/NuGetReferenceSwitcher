@@ -34,9 +34,9 @@ Visual Studio 2013 SDK:
 
 http://www.microsoft.com/en-us/download/details.aspx?id=40758
 	
-Visual Studio 2015 RC SDK: 
+Visual Studio 2015 SDK: 
 
-http://www.microsoft.com/en-us/download/details.aspx?id=46850
+https://msdn.microsoft.com/en-us/library/mt683786.aspx
 
 After installing the SDK, run one of the batch files from the `/build` directory in the corresponding Visual Studio Command Prompt. The release output can be found in the `/build/Output` directory. 
 
@@ -55,6 +55,10 @@ Visual Studio 2013:
 Visual Studio 2015: 
 
     C:\Program Files (x86)\Microsoft Visual Studio 14.0\Common7\IDE\devenv.exe
+
+Visual Studio 2016: 
+
+    C:\Program Files (x86)\Microsoft Visual Studio\2017\Enterprise\Common7\IDE\devenv.exe
 
 And set the `Command line arguments` to:
 
