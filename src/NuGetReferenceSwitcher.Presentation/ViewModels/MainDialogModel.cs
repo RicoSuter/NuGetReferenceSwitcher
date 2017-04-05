@@ -218,7 +218,17 @@ namespace NuGetReferenceSwitcher.Presentation.ViewModels
                 else
                 {
                     if (project.Object is VSProject)
-                        projects.Add(new ProjectModel((VSProject)project.Object));
+                    {
+                        try
+                        {
+                            projects.Add(new ProjectModel((VSProject)project.Object));
+                        }
+                        catch (Exception e)
+                        {
+                            MessageBox.Show("Could not load project " + project.Name + "\n" +
+                                            "(new MSBuild .csproj are not supported, unload them first): \n" + e);
+                        }
+                    }
                 }
             }
 
