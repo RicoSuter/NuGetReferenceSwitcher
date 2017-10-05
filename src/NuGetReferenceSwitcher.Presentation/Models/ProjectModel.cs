@@ -107,12 +107,11 @@ namespace NuGetReferenceSwitcher.Presentation.Models
         {
             if (File.Exists(assemblyPath))
             {
-                var reference = _vsProject.References.Add(assemblyPath);
-                Reference4 ref4 = reference as Reference4;
+                var reference = _vsProject.References.Add(assemblyPath) as Reference4;
 
-                if (ref4 != null)
+                if (reference != null)
                 {
-                    ref4.SpecificVersion = true;
+                    reference.SpecificVersion = true;
                 }
 
                 return true;
