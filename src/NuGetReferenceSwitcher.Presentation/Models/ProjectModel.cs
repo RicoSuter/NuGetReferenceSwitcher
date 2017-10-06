@@ -10,6 +10,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Windows.Threading;
+using System.Xml.Linq;
 using EnvDTE;
 using MyToolkit.Collections;
 using VSLangProj;
@@ -106,7 +107,13 @@ namespace NuGetReferenceSwitcher.Presentation.Models
         {
             if (File.Exists(assemblyPath))
             {
-                _vsProject.References.Add(assemblyPath);
+                var reference = _vsProject.References.Add(assemblyPath) as Reference4;
+
+                if (reference != null)
+                {
+                    reference.SpecificVersion = true;
+                }
+
                 return true;
             }
             return false; 
@@ -158,9 +165,31 @@ namespace NuGetReferenceSwitcher.Presentation.Models
             {
                 var reference = new ReferenceModel(vsReference);
                 References.Add(reference);
-                if (vsReference.Path.Contains("/packages/") || vsReference.Path.Contains("\\packages\\"))
+                if (vsReference.Path.ToLower().Contains("/packages/") || vsReference.Path.ToLower().Contains("\\packages\\"))
                     NuGetReferences.Add(reference);
             }
+        }
+
+        public void FixUpNuGetReferences()
+        {
+            XDocument xDoc = XDocument.Load(Path);
+
+            XNamespace ns = "http://schemas.microsoft.com/developer/msbuild/2003";
+
+            var itemGroup = xDoc.Root?.Elements(ns + "ItemGroup").Where(x => x.Elements(ns + "Reference").Any()).FirstOrDefault();
+
+            if (itemGroup != null)
+            {
+                foreach (XElement reference in itemGroup.Elements(ns + "Reference").Where(x => x.Elements(ns + "HintPath").Any()))
+                {
+                    foreach (XElement version in reference.Elements(ns + "SpecificVersion"))
+                    {
+                        version.Remove();
+                    }
+                }
+            }
+
+            //xDoc.Save(Path);
         }
     }
 }
