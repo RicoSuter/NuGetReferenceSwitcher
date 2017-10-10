@@ -164,8 +164,12 @@ namespace NuGetReferenceSwitcher.Presentation.Models
             {
                 var reference = new ReferenceModel(vsReference);
                 References.Add(reference);
-                if (vsReference.Path.ToLower().Contains("/packages/") || vsReference.Path.ToLower().Contains("\\packages\\"))
-                    NuGetReferences.Add(reference);
+
+                if (!string.IsNullOrWhiteSpace(vsReference.Path))
+                {
+                    if (vsReference.Path.ToLower().Contains("/packages/") || vsReference.Path.ToLower().Contains("\\packages\\"))
+                        NuGetReferences.Add(reference);
+                }
             }
         }
     }
