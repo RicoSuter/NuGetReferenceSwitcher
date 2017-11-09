@@ -13,6 +13,9 @@ using System.Windows.Documents;
 using System.Windows.Forms;
 using System.Windows.Input;
 using EnvDTE;
+
+using Microsoft.VisualStudio.PlatformUI;
+
 using MyToolkit.Collections;
 using MyToolkit.Mvvm;
 using NuGetReferenceSwitcher.Presentation.Models;
@@ -24,7 +27,7 @@ using Window = System.Windows.Window;
 namespace NuGetReferenceSwitcher.Presentation.Views
 {
     /// <summary>Interaction logic for MainDialog.xaml </summary>
-    public partial class MainDialog : Window
+    public partial class MainDialog : DialogWindow
     {
         private OpenFileDialog _dlg;
         
