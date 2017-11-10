@@ -8,7 +8,7 @@
 
 /build/Output
 
-/src/.vs/NuGetReferenceSwitcher
+/src/.vs
 /src/NuGetReferenceSwitcher.sln.ide
 /src/NuGetReferenceSwitcher.sln.GhostDoc.xml
 /src/UpgradeLog.htm
