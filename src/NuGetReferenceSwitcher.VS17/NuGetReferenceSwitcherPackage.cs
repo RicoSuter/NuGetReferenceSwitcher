@@ -63,7 +63,7 @@ namespace RicoSuter.NuGetReferenceSwitcher
                     var window = new MainDialog(application, GetType().Assembly);
                     var helper = new WindowInteropHelper(window);
                     helper.Owner = (IntPtr)application.MainWindow.HWnd;
-                    window.ShowDialog();
+                    window.ShowModal();
                 }
             }
         }
