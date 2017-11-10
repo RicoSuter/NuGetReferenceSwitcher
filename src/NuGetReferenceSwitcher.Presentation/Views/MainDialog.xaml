@@ -1,9 +1,10 @@
-﻿<Window x:Class="NuGetReferenceSwitcher.Presentation.Views.MainDialog"
+﻿<PlatformUi:DialogWindow x:Class="NuGetReferenceSwitcher.Presentation.Views.MainDialog"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:converters="clr-namespace:MyToolkit.Converters;assembly=MyToolkit.Extended"
         xmlns:viewModels="clr-namespace:NuGetReferenceSwitcher.Presentation.ViewModels"
-        xmlns:converters1="clr-namespace:NuGetReferenceSwitcher.Presentation.Converters"
+        xmlns:converters1="clr-namespace:NuGetReferenceSwitcher.Presentation.Converters" 
+        xmlns:PlatformUi="clr-namespace:Microsoft.VisualStudio.PlatformUI;assembly=Microsoft.VisualStudio.Shell.12.0"
         Title="Switch NuGet and Project references" 
         Height="700" Width="800" ResizeMode="CanResizeWithGrip"
         WindowStartupLocation="CenterScreen">
@@ -171,4 +172,5 @@
             </TabItem>
         </TabControl>
     </Grid>
-</Window>
+</PlatformUi:DialogWindow>
+
