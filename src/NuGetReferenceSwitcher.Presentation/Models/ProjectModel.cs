@@ -10,7 +10,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Windows.Threading;
-using System.Xml.Linq;
+using System.Xml;
 using EnvDTE;
 using MyToolkit.Collections;
 using VSLangProj;
@@ -21,13 +21,17 @@ namespace NuGetReferenceSwitcher.Presentation.Models
     {
         private readonly VSProject _vsProject;
 
+        public FileInfo SolutionFile { get; set; }
+
         /// <summary>Initializes a new instance of the <see cref="ProjectModel"/> class. </summary>
         /// <param name="project">The native project object. </param>
-        public ProjectModel(VSProject project)
+        /// <param name="application">The native application object. </param>
+        public ProjectModel(VSProject project, DTE application)
         {
             _vsProject = project;
-            
-            Name = project.Project.Name;
+
+			Name = project.Project.Name;
+            SolutionFile = new FileInfo(application.Solution.FileName);
             LoadReferences();
         }
 
@@ -158,13 +162,77 @@ namespace NuGetReferenceSwitcher.Presentation.Models
             References = new ExtendedObservableCollection<ReferenceModel>();
             NuGetReferences = new ExtendedObservableCollection<ReferenceModel>();
 
+            List<string> packageDirs = new List<string>();
+            packageDirs.Add("/packages/");
+            packageDirs.Add("\\packages\\");
+
+            if (SolutionFile.Exists)
+            {
+                string nuGetRepositoryPath = GetNuGetRepositoryPath(SolutionFile.Directory);
+                if (!string.IsNullOrEmpty(nuGetRepositoryPath))
+                {
+                    packageDirs.Add(nuGetRepositoryPath);
+                }
+            }
+
             foreach (var vsReference in _vsProject.References.OfType<Reference>())
             {
                 var reference = new ReferenceModel(vsReference);
                 References.Add(reference);
-                if (vsReference.Path.ToLower().Contains("/packages/") || vsReference.Path.ToLower().Contains("\\packages\\"))
-                    NuGetReferences.Add(reference);
+                string vsReferencePath = vsReference.Path.ToLower();
+                foreach (string packageDir in packageDirs)
+                {
+                    if (vsReferencePath.Contains(packageDir))
+                    {
+                        NuGetReferences.Add(reference);
+                        break;
+                    }
+                }
             }
+        }
+
+        /// <summary>
+        /// Looks for NuGet.Config files in every parent directories and returns the first repositoryPath found
+        /// </summary>
+        /// <param name="dir">The starting dir to look for a NuGet.config file</param>
+        /// <returns>repositoryPath if a path is found and exists</returns>
+        private string GetNuGetRepositoryPath(DirectoryInfo dir)
+        {
+            FileInfo nuGetConfigFile = dir.GetFiles("NuGet.Config").FirstOrDefault();
+
+            if (nuGetConfigFile != null)
+            {
+                XmlDocument nuGetConfig = new XmlDocument();
+                nuGetConfig.Load(nuGetConfigFile.FullName);
+                var pathNode = nuGetConfig.SelectSingleNode("//config//add[contains(@key,'repositoryPath')]");
+
+                if (pathNode?.Attributes?["value"] != null)
+                {
+                    string repositoryPath = pathNode.Attributes["value"].Value;
+                    if (System.IO.Path.IsPathRooted(repositoryPath))
+                    {
+                        return repositoryPath;
+                    }
+                    else
+                    {
+                        if (SolutionFile?.DirectoryName != null)
+                        {
+                            DirectoryInfo repositoryDirectory = new DirectoryInfo(System.IO.Path.Combine(SolutionFile.DirectoryName, repositoryPath));
+                            if (repositoryDirectory.Exists)
+                            {
+                                return repositoryDirectory.FullName.ToLower();
+                            }
+                        }
+                    }
+                }
+            }
+
+            if (dir.Parent != null)
+            {
+                return GetNuGetRepositoryPath(dir.Parent);
+            }
+
+            return null;
         }
     }
 }

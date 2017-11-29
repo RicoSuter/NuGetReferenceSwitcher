@@ -219,7 +219,7 @@ namespace NuGetReferenceSwitcher.Presentation.ViewModels
                     {
                         try
                         {
-                            projects.Add(new ProjectModel((VSProject)project.Object));
+                            projects.Add(new ProjectModel((VSProject)project.Object, Application));
                         }
                         catch (Exception e)
                         {
@@ -240,7 +240,7 @@ namespace NuGetReferenceSwitcher.Presentation.ViewModels
                 if (!string.IsNullOrEmpty(fromNuGetToProjectTransformation.ToProjectPath) && File.Exists(fromNuGetToProjectTransformation.ToProjectPath))
                 {
                     var project = Application.Solution.AddFromFile(fromNuGetToProjectTransformation.ToProjectPath);
-                    var myProject = new ProjectModel((VSProject)project.Object);
+                    var myProject = new ProjectModel((VSProject)project.Object, Application);
                     fromNuGetToProjectTransformation.ToProject = myProject;
                 }
                 else
