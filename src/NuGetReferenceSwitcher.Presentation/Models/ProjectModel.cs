@@ -6,6 +6,7 @@
 // <author>Rico Suter, mail@rsuter.com</author>
 //-----------------------------------------------------------------------
 
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -209,19 +210,18 @@ namespace NuGetReferenceSwitcher.Presentation.Models
                 if (pathNode?.Attributes?["value"] != null)
                 {
                     string repositoryPath = pathNode.Attributes["value"].Value;
+                    repositoryPath = Environment.ExpandEnvironmentVariables(repositoryPath);
+
                     if (System.IO.Path.IsPathRooted(repositoryPath))
                     {
                         return repositoryPath;
                     }
                     else
                     {
-                        if (SolutionFile?.DirectoryName != null)
+                        DirectoryInfo repositoryDirectory = new DirectoryInfo(System.IO.Path.Combine(nuGetConfigFile.DirectoryName, repositoryPath));
+                        if (repositoryDirectory.Exists)
                         {
-                            DirectoryInfo repositoryDirectory = new DirectoryInfo(System.IO.Path.Combine(SolutionFile.DirectoryName, repositoryPath));
-                            if (repositoryDirectory.Exists)
-                            {
-                                return repositoryDirectory.FullName.ToLower();
-                            }
+                            return repositoryDirectory.FullName.ToLower();
                         }
                     }
                 }
