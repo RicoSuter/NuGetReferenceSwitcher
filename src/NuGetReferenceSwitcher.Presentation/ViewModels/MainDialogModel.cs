@@ -8,6 +8,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -73,10 +74,14 @@ namespace NuGetReferenceSwitcher.Presentation.ViewModels
             get { return ExtensionAssembly != null ? ExtensionAssembly.GetVersionWithBuildTime() : "n/a"; }
         }
 
+        /// <summary>Gets the current visual studio solution directory</summary>
+        public string SolutionDirectory { get; private set; }
+
         /// <summary>Initializes the view model. Must only be called once per view model instance 
         /// (after the InitializeComponent method of a <see cref="!:UserControl"/>). </summary>
         public override async void Initialize()
         {
+            SolutionDirectory = GetSolutionDirectory();
             List<ProjectModel> projects = null;
             await RunTaskAsync(token => Task.Run(() =>
             {
@@ -99,6 +104,9 @@ namespace NuGetReferenceSwitcher.Presentation.ViewModels
         /// <returns>The task. </returns>
         public async Task SwitchToProjectReferencesAsync()
         {
+            // stash the local solution to track changes
+            StashLocalSolution();
+
             await RunTaskAsync(token => Task.Run(() =>
             {
                 // first, add all required projects
@@ -134,7 +142,7 @@ namespace NuGetReferenceSwitcher.Presentation.ViewModels
                                     PathUtilities.MakeRelative(assemblyToProjectSwitch.ToProject.Path,
                                         project.CurrentConfigurationPath) + "\t" +
                                     PathUtilities.MakeRelative(fromAssemblyPath, project.CurrentConfigurationPath) +
-                                    "\n";                                
+                                    "\n";
                             }
                             else
                             {
@@ -153,6 +161,7 @@ namespace NuGetReferenceSwitcher.Presentation.ViewModels
                         File.AppendAllText(project.CurrentConfigurationPath, nuGetReferenceTransformationsForProject);
                     }
                 }
+
             }, token));
         }
 
@@ -186,7 +195,7 @@ namespace NuGetReferenceSwitcher.Presentation.ViewModels
                             {
                                 MessageBox.Show("The project '" + transformation.ToAssemblyPath + "' could not be added. " +
                                                 "\nSkipped.", "Could not add project", MessageBoxButton.OK, MessageBoxImage.Error);
-                            }                           
+                            }
                         }
                     }
 
@@ -197,7 +206,15 @@ namespace NuGetReferenceSwitcher.Presentation.ViewModels
                 }
 
                 RemoveProjectsFromSolution(projectsToRemove);
+                RevertLocalSolution();
             }, token));
+
+            // delete all generated switcher files
+            var nugetReferenceSwitcherFiles = Directory.GetFiles(Directory.GetParent(GetSolutionDirectory()).FullName, "*.nugetreferenceswitcher", SearchOption.AllDirectories);
+            foreach (var file in nugetReferenceSwitcherFiles)
+            {
+                File.Delete(file);
+            }
         }
 
         private List<ProjectModel> GetAllProjects(IEnumerable<Project> objects)
@@ -271,6 +288,43 @@ namespace NuGetReferenceSwitcher.Presentation.ViewModels
                         project.RemoveFromSolution(Application.Solution);
                 }
             }
+        }
+
+        private string GetSolutionDirectory()
+        {
+            return Directory.GetParent(Application.Solution.FullName).FullName;
+        }
+
+        private bool StashLocalSolution()
+        {
+            return ExecuteCommand("git stash");
+        }
+
+        private bool RevertLocalSolution()
+        {
+            StashLocalSolution();
+            return ExecuteCommand("git stash drop && git stash pop");
+        }
+
+        private bool ExecuteCommand(string command)
+        {
+            var process = new System.Diagnostics.Process()
+            {
+                StartInfo = new ProcessStartInfo()
+                {
+                    RedirectStandardError = true,
+                    RedirectStandardOutput = true,
+                    UseShellExecute = false,
+                    WindowStyle = ProcessWindowStyle.Hidden,
+                    FileName = "cmd.exe",
+                    Arguments = "/C cd " + SolutionDirectory + " && " + command
+                }
+            };
+            process.Start();
+            process.WaitForExit();
+            var errors = process.StandardError.ReadToEnd();
+            var output = process.StandardOutput.ReadToEnd();
+            return process.ExitCode.Equals(0);
         }
     }
 }
