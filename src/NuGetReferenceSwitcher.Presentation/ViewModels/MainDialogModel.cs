@@ -77,6 +77,12 @@ namespace NuGetReferenceSwitcher.Presentation.ViewModels
         /// <summary>Gets the current visual studio solution directory</summary>
         public string SolutionDirectory { get; private set; }
 
+        /// <summary>
+        /// Gets or sets the current configuration to use git to stash changes made by this tool in order to 
+        /// cleanup after reverting back to nuget references.
+        /// </summary>
+        public bool UseGit { get; set; } = true;
+
         /// <summary>Initializes the view model. Must only be called once per view model instance 
         /// (after the InitializeComponent method of a <see cref="!:UserControl"/>). </summary>
         public override async void Initialize()
@@ -308,6 +314,9 @@ namespace NuGetReferenceSwitcher.Presentation.ViewModels
 
         private bool ExecuteCommand(string command)
         {
+            // Do not execute anything if the user has opted out of this feature
+            if (!UseGit) return false;
+
             var process = new System.Diagnostics.Process()
             {
                 StartInfo = new ProcessStartInfo()

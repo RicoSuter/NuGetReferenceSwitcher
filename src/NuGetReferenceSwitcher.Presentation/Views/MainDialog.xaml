@@ -28,6 +28,7 @@
                         <RowDefinition Height="Auto" />
                         <RowDefinition Height="*" />
                         <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
                     </Grid.RowDefinitions>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*" />
@@ -100,6 +101,9 @@
 
                     <Button Grid.Row="2" Margin="8" Padding="4" Grid.Column="0" Grid.ColumnSpan="2"
                             Content="Switch to Project references" Click="OnSwitchToProjectReferences" />
+                    <CheckBox Grid.Row="3" Margin="8" Padding="4" Grid.Column="0" Grid.ColumnSpan="2"
+                              Content="Enable State Restoration After Reverting Back To Nuget References"
+                              IsChecked="{Binding UseGit, Mode=TwoWay}" />
                 </Grid>
             </TabItem>
             <TabItem Header="Switch to NuGet references">
