@@ -102,7 +102,8 @@
                     <Button Grid.Row="2" Margin="8" Padding="4" Grid.Column="0" Grid.ColumnSpan="2"
                             Content="Switch to Project references" Click="OnSwitchToProjectReferences" />
                     <CheckBox Grid.Row="3" Margin="8" Padding="4" Grid.Column="0" Grid.ColumnSpan="2"
-                              Content="Enable State Restoration After Reverting Back To Nuget References"
+                              Content="Use Smart Stash"
+                              ToolTip="Stashes any current changes in order to utilize git to cleanup any changes from switching to project references."
                               IsChecked="{Binding UseGit, Mode=TwoWay}" />
                 </Grid>
             </TabItem>
