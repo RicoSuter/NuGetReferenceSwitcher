@@ -23,7 +23,9 @@ namespace NuGetReferenceSwitcher.Presentation.Models
     public class FromNuGetToProjectTransformation : ObservableObject
     {
         private string _toProjectPath;
+        private string _toTestProjectPath;
         private ProjectModel _toProject;
+        private ProjectModel _toTestProject;
 
         /// <summary>Initializes a new instance of the <see cref="FromNuGetToProjectTransformation"/> class. </summary>
         /// <param name="projects">The projects. </param>
@@ -92,6 +94,36 @@ namespace NuGetReferenceSwitcher.Presentation.Models
                         SelectedMode = NuGetToProjectMode.ProjectPath;
                     else
                         SelectedMode = NuGetToProjectMode.Project;
+                }
+            }
+        }
+
+        public ProjectModel ToTestProject
+        {
+            get { return _toTestProject; }
+            set
+            {
+                if (Set(ref _toTestProject, value))
+                {
+                    if (_toTestProject == null)
+                        SelectedMode = NuGetToProjectMode.ProjectPath;
+                    else
+                        SelectedMode = NuGetToProjectMode.Project;
+                }
+            }
+        }
+
+        public string ToTestProjectPath
+        {
+            get { return _toTestProjectPath; }
+            set
+            {
+                if (Set(ref _toTestProjectPath, value))
+                {
+                    if (_toTestProjectPath == null)
+                        SelectedMode = NuGetToProjectMode.Project;
+                    else
+                        SelectedMode = NuGetToProjectMode.ProjectPath;
                 }
             }
         }

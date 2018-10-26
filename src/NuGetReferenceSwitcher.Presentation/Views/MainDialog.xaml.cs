@@ -102,5 +102,24 @@ namespace NuGetReferenceSwitcher.Presentation.Views
             if (_dlg.ShowDialog() == System.Windows.Forms.DialogResult.OK)
                 fntpSwitch.ToProjectPath = _dlg.FileName;
         }
+
+        private void OnSelectTestProjectFile(object sender, RoutedEventArgs e)
+        {
+            var fntpSwitch = (FromNuGetToProjectTransformation)((Button)sender).Tag;
+            if (_dlg == null)
+            {
+                _dlg = new OpenFileDialog();
+                _dlg.Filter = "CSharp Projects (*.csproj)|*.csproj|VB.NET Projects (*.vbproj)|*.vbproj";
+
+                // switch to VB if any VB project is already referenced
+                if (Model.Transformations.Any(t => t.ToTestProjectPath != null && t.ToTestProjectPath.EndsWith(".vbproj", System.StringComparison.OrdinalIgnoreCase)))
+                    _dlg.FilterIndex = 2;
+            }
+
+            _dlg.Title = string.Format("Select Project for '{0}'", fntpSwitch.FromAssemblyName);
+
+            if (_dlg.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+                fntpSwitch.ToTestProjectPath = _dlg.FileName;
+        }
     }
 }

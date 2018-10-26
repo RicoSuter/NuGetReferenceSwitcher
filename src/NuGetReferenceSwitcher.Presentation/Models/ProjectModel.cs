@@ -144,7 +144,7 @@ namespace NuGetReferenceSwitcher.Presentation.Models
             {
                 var lines = File.ReadAllLines(configurationPath)
                     .Select(l => l.Split('\t'))
-                    .Where(l => l.Length == 3).ToArray();
+                    .Where(l => l.Length == 4).ToArray();
 
                 
 
@@ -152,7 +152,8 @@ namespace NuGetReferenceSwitcher.Presentation.Models
                     list.Add(new FromProjectToNuGetTransformation {
                         FromProjectName = line[0],
                         FromProjectPath = PathUtilities.MakeAbsolute(line[1], configurationPath),
-                        ToAssemblyPath = PathUtilities.MakeAbsolute(line[2], configurationPath)
+                        ToAssemblyPath = PathUtilities.MakeAbsolute(line[2], configurationPath),
+                        FromTestProjectName = line[3]
                     });
             }
             return list;
