@@ -46,6 +46,12 @@ namespace NuGetReferenceSwitcher.Presentation.Models
                     ToProjectPath = swi.FromProjectPath;
                 else
                     ToProject = targetProject;
+
+                var targetTestProject = projects.FirstOrDefault(p => p.Path == swi.FromTestProjectPath);
+                if (targetTestProject == null)
+                    ToTestProjectPath = swi.FromTestProjectPath;
+                else
+                    ToTestProject = targetProject;
             }
             else
                 SelectedMode = NuGetToProjectMode.Deactivated;

@@ -139,6 +139,8 @@ namespace NuGetReferenceSwitcher.Presentation.ViewModels
                                     "\t" +
                                     assemblyToProjectSwitch.ToTestProject.Name +
                                     "\t" +
+                                    PathUtilities.MakeRelative(assemblyToProjectSwitch.ToTestProject.Path,
+                                        project.CurrentConfigurationPath) +
                                     "\n";
                             }
                             else
@@ -258,8 +260,6 @@ namespace NuGetReferenceSwitcher.Presentation.ViewModels
                     var myProject = new ProjectModel((VSProject)project.Object, Application);
                     fromNuGetToProjectTransformation.ToTestProject = myProject;
                 }
-                else
-                    MessageBox.Show("The project '" + fromNuGetToProjectTransformation.ToTestProjectPath + "' could not be found. (ignored)", "Project not found", MessageBoxButton.OK, MessageBoxImage.Stop);
             }
         }
 

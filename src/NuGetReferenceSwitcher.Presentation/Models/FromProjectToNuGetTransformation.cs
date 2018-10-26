@@ -21,5 +21,8 @@ namespace NuGetReferenceSwitcher.Presentation.Models
 
         /// <summary>Gets or sets the test project name. </summary>
         public string FromTestProjectName { get; set; }
+
+        /// <summary>Gets or sets the test project path. </summary>
+        public string FromTestProjectPath { get; set; }
     }
 }
