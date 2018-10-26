@@ -31,7 +31,7 @@ namespace NuGetReferenceSwitcher.Presentation.Models
         {
             _vsProject = project;
 
-			Name = project.Project.Name;
+            Name = project.Project.Name;
             SolutionFile = new FileInfo(application.Solution.FileName);
             LoadReferences();
         }
@@ -56,7 +56,7 @@ namespace NuGetReferenceSwitcher.Presentation.Models
         {
             get { return GetConfigurationPath(".previous.nugetreferenceswitcher"); }
         }
-        
+
         /// <summary>Gets the current project reference to NuGet reference transformations. </summary>
         public List<FromProjectToNuGetTransformation> CurrentToNuGetTransformations
         {
@@ -78,7 +78,7 @@ namespace NuGetReferenceSwitcher.Presentation.Models
         /// <summary>Deletes the previous configuration file and renames the current 
         /// configuration file to the path of the previous configuration file.  </summary>
         public void DeleteConfigurationFile()
-        {               
+        {
             if (File.Exists(CurrentConfigurationPath))
             {
                 if (File.Exists(PreviousConfigurationPath))
@@ -98,11 +98,15 @@ namespace NuGetReferenceSwitcher.Presentation.Models
         /// <summary>Saves the project. </summary>
         public void Save()
         {
-            // TODO: This may lock up the UI => check and fix
-            Dispatcher.CurrentDispatcher.InvokeAsync(() =>
+            // The Dispatcher was not working, plus not all Project items were saved. This work fines (after also saving the solution)
+            // No need to save the solution manually afterward. 
+            _vsProject.Project.Save();
+            for (int j = 1; j <= _vsProject.Project.ProjectItems.Count; j++)
             {
-                _vsProject.Project.Save();
-            });
+                var item = _vsProject.Project.ProjectItems.Item(j);
+                if (!item.Saved)
+                    item.Save();
+            }
         }
 
         /// <summary>Adds an assembly reference to the project.</summary>
@@ -118,7 +122,7 @@ namespace NuGetReferenceSwitcher.Presentation.Models
 
                 return true;
             }
-            return false; 
+            return false;
         }
 
         /// <summary>Removes the project from the solution. </summary>
@@ -146,10 +150,11 @@ namespace NuGetReferenceSwitcher.Presentation.Models
                     .Select(l => l.Split('\t'))
                     .Where(l => l.Length == 5).ToArray();
 
-                
+
 
                 foreach (var line in lines)
-                    list.Add(new FromProjectToNuGetTransformation {
+                    list.Add(new FromProjectToNuGetTransformation
+                    {
                         FromProjectName = line[0],
                         FromProjectPath = PathUtilities.MakeAbsolute(line[1], configurationPath),
                         ToAssemblyPath = PathUtilities.MakeAbsolute(line[2], configurationPath),

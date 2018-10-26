@@ -74,10 +74,7 @@
                                                            Visibility="{Binding ToTestProjectPath, Converter={StaticResource VisibilityConverter}}" />
                                             </StackPanel>
                                             <StackPanel Visibility="{Binding SelectedMode, Mode=OneWay, ConverterParameter='Project', Converter={StaticResource NuGetToProjectModeConverter}}">
-                                                    <ComboBox ItemsSource="{Binding Project, Source={StaticResource ViewModel}}"
-                                                              SelectedItem="{Binding ToTestProject, Mode=TwoWay}"
-                                                              DisplayMemberPath="Name" />
-                                                </StackPanel>
+                                                    </StackPanel>
                                         </StackPanel>
                                     </StackPanel>
                                 </DataTemplate>

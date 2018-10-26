@@ -160,6 +160,8 @@ namespace NuGetReferenceSwitcher.Presentation.ViewModels
                         File.AppendAllText(project.CurrentConfigurationPath, nuGetReferenceTransformationsForProject);
                     }
                 }
+                if (!Application.Solution.Saved)
+                    Application.Solution.SaveAs(Application.Solution.FullName);
             }, token));
         }
 
@@ -206,6 +208,8 @@ namespace NuGetReferenceSwitcher.Presentation.ViewModels
                 }
 
                 RemoveProjectsFromSolution(projectsToRemove);
+                if (!Application.Solution.Saved)
+                    Application.Solution.SaveAs(Application.Solution.FullName);
             }, token));
         }
 
