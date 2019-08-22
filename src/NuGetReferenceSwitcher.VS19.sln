@@ -1,0 +1,34 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 16
+VisualStudioVersion = 16.0.26228.4
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{ACE60C03-4FB9-498F-A6E3-8D20C10F0C4E}"
+	ProjectSection(SolutionItems) = preProject
+		IntegrationTests.testsettings = IntegrationTests.testsettings
+		UnitTests.testsettings = UnitTests.testsettings
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NuGetReferenceSwitcher.VS19", "NuGetReferenceSwitcher.VS19\NuGetReferenceSwitcher.VS19.csproj", "{BF9A4C82-BEB4-4BCE-8CDF-5AA6D4A16E46}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NuGetReferenceSwitcher.Presentation", "NuGetReferenceSwitcher.Presentation\NuGetReferenceSwitcher.Presentation.csproj", "{72D2BBE2-B1F7-4782-B7BD-CA377F895746}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{BF9A4C82-BEB4-4BCE-8CDF-5AA6D4A16E46}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BF9A4C82-BEB4-4BCE-8CDF-5AA6D4A16E46}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BF9A4C82-BEB4-4BCE-8CDF-5AA6D4A16E46}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BF9A4C82-BEB4-4BCE-8CDF-5AA6D4A16E46}.Release|Any CPU.Build.0 = Release|Any CPU
+		{72D2BBE2-B1F7-4782-B7BD-CA377F895746}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{72D2BBE2-B1F7-4782-B7BD-CA377F895746}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{72D2BBE2-B1F7-4782-B7BD-CA377F895746}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{72D2BBE2-B1F7-4782-B7BD-CA377F895746}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
