@@ -1,0 +1,27 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<PackageManifest Version="2.0.0" xmlns="http://schemas.microsoft.com/developer/vsx-schema/2011" xmlns:d="http://schemas.microsoft.com/developer/vsx-schema-design/2011">
+    <Metadata>
+        <Identity Id="87a7b0e9-e41c-47c8-953c-b81650401edc" Version="1.9" Language="en-US" Publisher="RicoSuter" />
+        <DisplayName>NuGet Reference Switcher for Visual Studio 2019</DisplayName>
+        <Description xml:space="preserve">Visual Studio extension which automatically switches NuGet assembly references to project references and vice-versa. This is useful when developing applications which reference own NuGet packages: When developing an application, switch to project references so that all code is editable and debuggable. After finishing the development, create new NuGet package versions, switch back to NuGet references and upgrade to the new NuGet versions.</Description>
+        <MoreInfo>https://nugetreferenceswitcher.codeplex.com</MoreInfo>
+        <Tags>Deployment, NuGet, Dependency management</Tags>
+    </Metadata>
+    <Installation InstalledByMsi="false">
+        <InstallationTarget Id="Microsoft.VisualStudio.Pro" Version="[16.0,17.0)" />
+        <InstallationTarget Id="Microsoft.VisualStudio.Enterprise" Version="[16.0,17.0)" />
+    </Installation>
+    <Dependencies>
+        <Dependency Id="Microsoft.Framework.NDP" DisplayName="Microsoft .NET Framework" d:Source="Manual" Version="[4.6,)" />
+        <Dependency d:Source="Installed" Version="[16.0,17.0)" Id="Microsoft.VisualStudio.MPF.16.0" DisplayName="Visual Studio MPF 16.0" />
+    </Dependencies>
+    <Assets>
+        <Asset Type="Microsoft.VisualStudio.VsPackage" d:Source="Project" d:ProjectName="%CurrentProject%" Path="|%CurrentProject%;PkgdefProjectOutputGroup|" />
+        <Asset Type="Microsoft.VisualStudio.Assembly" d:Source="Project" d:ProjectName="NuGetReferenceSwitcher.Presentation" Path="|NuGetReferenceSwitcher.Presentation|" AssemblyName="|NuGetReferenceSwitcher.Presentation;AssemblyName|" />
+        <Asset Type="Microsoft.VisualStudio.Assembly" d:Source="File" Path="MyToolkit.dll" AssemblyName="MyToolkit, Version=2.3.12.0, Culture=neutral, PublicKeyToken=3e349a1360994d26" />
+        <Asset Type="Microsoft.VisualStudio.Assembly" d:Source="File" Path="MyToolkit.Extended.dll" AssemblyName="MyToolkit.Extended, Version=2.3.12.0, Culture=neutral, PublicKeyToken=3e349a1360994d26" />
+    </Assets>
+    <Prerequisites>
+        <Prerequisite Id="Microsoft.Net.Component.4.7.2.TargetingPack" Version="[16.0.28517.75,17.0)" DisplayName=".NET Framework 4.7.2 targeting pack" />
+    </Prerequisites>
+</PackageManifest>

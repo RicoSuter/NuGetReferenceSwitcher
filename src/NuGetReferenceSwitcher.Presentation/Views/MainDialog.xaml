@@ -4,7 +4,7 @@
         xmlns:converters="clr-namespace:MyToolkit.Converters;assembly=MyToolkit.Extended"
         xmlns:viewModels="clr-namespace:NuGetReferenceSwitcher.Presentation.ViewModels"
         xmlns:converters1="clr-namespace:NuGetReferenceSwitcher.Presentation.Converters" 
-        xmlns:PlatformUi="clr-namespace:Microsoft.VisualStudio.PlatformUI;assembly=Microsoft.VisualStudio.Shell.12.0"
+        xmlns:PlatformUi="clr-namespace:Microsoft.VisualStudio.PlatformUI;assembly=Microsoft.VisualStudio.Shell.15.0"
         Title="Switch NuGet and Project references" 
         Height="700" Width="800" ResizeMode="CanResizeWithGrip"
         WindowStartupLocation="CenterScreen">
