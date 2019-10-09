@@ -16,10 +16,11 @@ Features:
 
 ## Download from Visual Studio Gallery
 
-* [Download for Visual Studio 2012](https://visualstudiogallery.msdn.microsoft.com/9a7bbfb3-1b44-4a59-8204-0a01abbeeaca)
-* [Download for Visual Studio 2013](https://visualstudiogallery.msdn.microsoft.com/68878c27-110c-43ec-ae61-3ea3f7aae88c)
-* [Download for Visual Studio 2015](https://visualstudiogallery.msdn.microsoft.com/e2458c0b-03c0-47a9-a94b-0d28567e0a84)
+* [Download for Visual Studio 2019](https://marketplace.visualstudio.com/items?itemName=RicoSuter.NuGetReferenceSwitcherforVisualStudio2019)
 * [Download for Visual Studio 2017](https://marketplace.visualstudio.com/vsgallery/ef35a0f9-2712-4634-97e0-51c03f4be1e3)
+* [Download for Visual Studio 2015](https://visualstudiogallery.msdn.microsoft.com/e2458c0b-03c0-47a9-a94b-0d28567e0a84)
+* [Download for Visual Studio 2013](https://visualstudiogallery.msdn.microsoft.com/68878c27-110c-43ec-ae61-3ea3f7aae88c)
+* [Download for Visual Studio 2012](https://visualstudiogallery.msdn.microsoft.com/9a7bbfb3-1b44-4a59-8204-0a01abbeeaca)
 
 The NuGet Reference Switcher extension is developed by [Rico Suter](http://rsuter.com) using the [MyToolkit](http://mytoolkit.io) library. 
 
