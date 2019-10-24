@@ -130,11 +130,18 @@ namespace NuGetReferenceSwitcher.Presentation.ViewModels
 
                                 project.AddProjectReference(assemblyToProjectSwitch.ToProject);
                                 nuGetReferenceTransformationsForProject +=
-                                    assemblyToProjectSwitch.ToProject.Name + "\t" +
+                                    assemblyToProjectSwitch.ToProject.Name + 
+                                    "\t" +
                                     PathUtilities.MakeRelative(assemblyToProjectSwitch.ToProject.Path,
-                                        project.CurrentConfigurationPath) + "\t" +
+                                        project.CurrentConfigurationPath) + 
+                                    "\t" +
                                     PathUtilities.MakeRelative(fromAssemblyPath, project.CurrentConfigurationPath) +
-                                    "\n";                                
+                                    "\t" +
+                                    assemblyToProjectSwitch.ToTestProject.Name +
+                                    "\t" +
+                                    PathUtilities.MakeRelative(assemblyToProjectSwitch.ToTestProject.Path,
+                                        project.CurrentConfigurationPath) +
+                                    "\n";
                             }
                             else
                             {
@@ -153,8 +160,12 @@ namespace NuGetReferenceSwitcher.Presentation.ViewModels
                         File.AppendAllText(project.CurrentConfigurationPath, nuGetReferenceTransformationsForProject);
                     }
                 }
+                if (!Application.Solution.Saved)
+                    Application.Solution.SaveAs(Application.Solution.FullName);
             }, token));
         }
+
+
 
         /// <summary>Handles an exception which occured in the <see cref="M:MyToolkit.Mvvm.ViewModelBase.RunTaskAsync(System.Func{System.Threading.CancellationToken,System.Threading.Tasks.Task})"/> method. </summary>
         /// <param name="exception">The exception. </param>
@@ -186,7 +197,7 @@ namespace NuGetReferenceSwitcher.Presentation.ViewModels
                             {
                                 MessageBox.Show("The project '" + transformation.ToAssemblyPath + "' could not be added. " +
                                                 "\nSkipped.", "Could not add project", MessageBoxButton.OK, MessageBoxImage.Error);
-                            }                           
+                            }
                         }
                     }
 
@@ -197,6 +208,8 @@ namespace NuGetReferenceSwitcher.Presentation.ViewModels
                 }
 
                 RemoveProjectsFromSolution(projectsToRemove);
+                if (!Application.Solution.Saved)
+                    Application.Solution.SaveAs(Application.Solution.FullName);
             }, token));
         }
 
@@ -245,15 +258,29 @@ namespace NuGetReferenceSwitcher.Presentation.ViewModels
                 }
                 else
                     MessageBox.Show("The project '" + fromNuGetToProjectTransformation.ToProjectPath + "' could not be found. (ignored)", "Project not found", MessageBoxButton.OK, MessageBoxImage.Stop);
+                if (!string.IsNullOrEmpty(fromNuGetToProjectTransformation.ToTestProjectPath) && File.Exists(fromNuGetToProjectTransformation.ToTestProjectPath))
+                {
+                    var project = Application.Solution.AddFromFile(fromNuGetToProjectTransformation.ToTestProjectPath);
+                    var myProject = new ProjectModel((VSProject)project.Object, Application);
+                    fromNuGetToProjectTransformation.ToTestProject = myProject;
+                }
             }
         }
 
         private List<ProjectModel> GetCurrentProjectsToRemove()
         {
-            return Projects
+            var pjToRemove = new List<ProjectModel>();
+            var projectsToRemove = Projects
                 .SelectMany(p => p.CurrentToNuGetTransformations.Select(s => s.FromProjectName))
                 .Select(name => Projects.SingleOrDefault(p => p.Name == name))
                 .ToList();
+            pjToRemove.AddRange(projectsToRemove);
+            var testProjectsToRemove = Projects
+                .SelectMany(p => p.CurrentToNuGetTransformations.Select(s => s.FromTestProjectName))
+                .Select(name => Projects.SingleOrDefault(p => p.Name == name))
+                .ToList();
+            pjToRemove.AddRange(testProjectsToRemove);
+            return pjToRemove;
         }
 
         private void RemoveProjectsFromSolution(List<ProjectModel> projectsToDelete)

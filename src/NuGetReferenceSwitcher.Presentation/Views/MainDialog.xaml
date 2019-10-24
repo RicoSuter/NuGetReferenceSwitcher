@@ -68,6 +68,13 @@
                                                           SelectedItem="{Binding ToProject, Mode=TwoWay}"
                                                           DisplayMemberPath="Name" />
                                             </StackPanel>
+                                            <StackPanel Visibility="{Binding SelectedMode, Mode=OneWay, ConverterParameter='ProjectPath', Converter={StaticResource NuGetToProjectModeConverter}}">
+                                                <Button Content="Select a Test Project to add" Click="OnSelectTestProjectFile" Tag="{Binding}" />
+                                                <TextBlock Text="{Binding ToTestProjectPath}" TextWrapping="Wrap" Margin="0,4,0,0"
+                                                           Visibility="{Binding ToTestProjectPath, Converter={StaticResource VisibilityConverter}}" />
+                                            </StackPanel>
+                                            <StackPanel Visibility="{Binding SelectedMode, Mode=OneWay, ConverterParameter='Project', Converter={StaticResource NuGetToProjectModeConverter}}">
+                                                    </StackPanel>
                                         </StackPanel>
                                     </StackPanel>
                                 </DataTemplate>
