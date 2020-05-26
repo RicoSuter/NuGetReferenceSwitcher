@@ -12,6 +12,7 @@ using System.IO;
 using System.Linq;
 using System.Windows.Threading;
 using System.Xml;
+using System.Xml.Linq;
 using EnvDTE;
 using MyToolkit.Collections;
 using VSLangProj;
@@ -164,8 +165,28 @@ namespace NuGetReferenceSwitcher.Presentation.Models
             NuGetReferences = new ExtendedObservableCollection<ReferenceModel>();
 
             List<string> packageDirs = new List<string>();
-            packageDirs.Add("/packages/");
-            packageDirs.Add("\\packages\\");
+
+            // Check if the NuGet.Config file has a repository path set and use it
+            var nugetSettingsPath =
+                System.IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "NuGet",
+                    "NuGet.Config");
+            var configRepositoryPathOverride = false;
+            if (File.Exists(nugetSettingsPath))
+            {
+                var repositoryPath = (string)XElement.Load(nugetSettingsPath).Descendants("add").FirstOrDefault(add => (string)add.Attribute("key") == "repositoryPath")?.Attribute("value");
+                if (repositoryPath != null)
+                {
+                    packageDirs.Add(repositoryPath);
+                    configRepositoryPathOverride = true;
+                }
+            }
+
+            // If the Nuget.Config file has not repository path set then use default paths
+            if (!configRepositoryPathOverride)
+            {
+                packageDirs.Add("/packages/");
+                packageDirs.Add("\\packages\\");
+            }
 
             if (SolutionFile.Exists)
             {
