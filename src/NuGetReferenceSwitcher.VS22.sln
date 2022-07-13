@@ -1,0 +1,47 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.2.32602.215
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{ACE60C03-4FB9-498F-A6E3-8D20C10F0C4E}"
+	ProjectSection(SolutionItems) = preProject
+		IntegrationTests.testsettings = IntegrationTests.testsettings
+		UnitTests.testsettings = UnitTests.testsettings
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NuGetReferenceSwitcher.VS22", "NuGetReferenceSwitcher.VS22\NuGetReferenceSwitcher.VS22.csproj", "{738F6C75-AA84-44ED-9999-084522C47122}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NuGetReferenceSwitcher.Presentation", "NuGetReferenceSwitcher.Presentation\NuGetReferenceSwitcher.Presentation.csproj", "{72D2BBE2-B1F7-4782-B7BD-CA377F895746}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Debug|x86 = Debug|x86
+		Release|Any CPU = Release|Any CPU
+		Release|x86 = Release|x86
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{738F6C75-AA84-44ED-9999-084522C47122}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{738F6C75-AA84-44ED-9999-084522C47122}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{738F6C75-AA84-44ED-9999-084522C47122}.Debug|x86.ActiveCfg = Debug|x86
+		{738F6C75-AA84-44ED-9999-084522C47122}.Debug|x86.Build.0 = Debug|x86
+		{738F6C75-AA84-44ED-9999-084522C47122}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{738F6C75-AA84-44ED-9999-084522C47122}.Release|Any CPU.Build.0 = Release|Any CPU
+		{738F6C75-AA84-44ED-9999-084522C47122}.Release|x86.ActiveCfg = Release|x86
+		{738F6C75-AA84-44ED-9999-084522C47122}.Release|x86.Build.0 = Release|x86
+		{72D2BBE2-B1F7-4782-B7BD-CA377F895746}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{72D2BBE2-B1F7-4782-B7BD-CA377F895746}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{72D2BBE2-B1F7-4782-B7BD-CA377F895746}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{72D2BBE2-B1F7-4782-B7BD-CA377F895746}.Debug|x86.Build.0 = Debug|Any CPU
+		{72D2BBE2-B1F7-4782-B7BD-CA377F895746}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{72D2BBE2-B1F7-4782-B7BD-CA377F895746}.Release|Any CPU.Build.0 = Release|Any CPU
+		{72D2BBE2-B1F7-4782-B7BD-CA377F895746}.Release|x86.ActiveCfg = Release|Any CPU
+		{72D2BBE2-B1F7-4782-B7BD-CA377F895746}.Release|x86.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {A693A6CB-F451-44A6-A2E1-66CAB6974F7A}
+	EndGlobalSection
+EndGlobal

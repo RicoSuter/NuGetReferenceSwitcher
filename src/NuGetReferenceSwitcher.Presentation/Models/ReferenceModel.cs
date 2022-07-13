@@ -8,6 +8,7 @@
 
 using VSLangProj;
 
+
 namespace NuGetReferenceSwitcher.Presentation.Models
 {
     public class ReferenceModel
