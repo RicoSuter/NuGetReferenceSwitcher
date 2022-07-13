@@ -10,11 +10,11 @@
         WindowStartupLocation="CenterScreen">
 
     <Window.Resources>
-        <viewModels:MainDialogModel x:Key="ViewModel" />
+        <!--<viewModels:MainDialogModel x:Key="ViewModel" />
         <converters:NotConverter x:Key="NotConverter" />
         <converters:VisibilityConverter x:Key="VisibilityConverter" />
         <converters1:NuGetToProjectModeConverter x:Key="NuGetToProjectModeConverter" />
-        <converters1:NotNuGetToProjectModeConverter x:Key="NotNuGetToProjectModeConverter" />
+        <converters1:NotNuGetToProjectModeConverter x:Key="NotNuGetToProjectModeConverter" />-->
     </Window.Resources>
 
     <Grid DataContext="{StaticResource ViewModel}">
