@@ -64,6 +64,10 @@ Visual Studio 2017:
 
     C:\Program Files (x86)\Microsoft Visual Studio\2017\Enterprise\Common7\IDE\devenv.exe
 
+Visual Studio 2026: 
+
+    C:\Program Files\Microsoft Visual Studio\18\Community\Common7\IDE\devenv.exe
+
 And set the `Command line arguments` to:
 
     /rootsuffix Exp
